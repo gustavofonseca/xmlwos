@@ -1,0 +1,4 @@
+*.pyc
+databases
+reports
+xmlwos-env
