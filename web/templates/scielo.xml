@@ -1,7 +1,10 @@
+{% set original_language = article['original_language'] %}
 <article dtd-version="3.0"
    xmlns:xlink="http://www.w3.org/1999/xlink" 
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   {% set original_language = article['original_language'] %}
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   article-type="{{ article['article_type'] }}"
+   xml:lang="{{ original_language }}">
+
    <front>
         <journal-meta>
             <journal-id journal-id-type="publisher">{{ article['journal-id'] }}</journal-id>
@@ -31,6 +34,15 @@
             {% if 'article-id-doi' in article %}
                 <article-id pub-id-type="doi">{{ article['article-id-doi'] }}</article-id>
             {% end %}
+            {% if 'journal-subjects' in article %}
+                <article-categories>
+                    <subj-group>
+                        {% for subj in article['journal-subjects'] %}
+                            <subject>{{ subj }}</subject>
+                        {% end %}
+                    </subj-group>
+                </article-categories>
+             {% end %}
             <title-group>
                 {% for lang, title in article['group-title']['article-title'].items() %}
                     <article-title xml:lang="{{ lang }}">{{ title }}</article-title>

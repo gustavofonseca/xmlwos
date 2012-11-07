@@ -1,7 +1,9 @@
 class ShineData(object):
 
-    def __init__(self, response, doi_prefix):
+    def __init__(self, response, doi_prefix, article_types):
         self.data = response
+        self.article_types = article_types
+
         if doi_prefix:
             self.doi_prefix = doi_prefix
 
@@ -13,6 +15,15 @@ class ShineData(object):
         article['issn'] = self.data['title']['v400'][0]['_'].upper()
         article['article-id'] = self.data['article']['v880'][0]['_'].upper()
 
+        # Defining Article type according to dict defined into choices.py
+        if 'v71' in self.data['article']:
+            article_type_code = self.data['article']['v71'][0]['_']
+
+            if article_type_code in self.article_types:
+                article['article_type'] = self.article_types[article_type_code]
+            else:
+                article['article_type'] = self.article_types['nd']
+
         if 'v690' in self.data['title']:
             article['scielo-url'] = self.data['title']['v690'][0]['_']
 
@@ -20,15 +31,15 @@ class ShineData(object):
         if 'v237' in self.data['article']:
             article['article-id-doi'] = self.data['article']['v237'][0]['_']
         else:
-            if self.doi_prefix and article['article-id'] in self.doi_prefix:
+            if self.doi_prefix and article['scielo-url'] in self.doi_prefix:
                 if 'v881' in self.data['article']:
                     article['article-id-doi'] = "{0}/{1}".format(
-                        self.doi_prefix[article['article-id']],
+                        self.doi_prefix[article['scielo-url']],
                         self.data['article']['v881'][0]['_'].upper()
                     )
                 else:
                     article['article-id-doi'] = "{0}/{1}".format(
-                        self.doi_prefix[article['article-id']],
+                        self.doi_prefix[article['scielo-url']],
                         self.data['article']['v880'][0]['_'].upper()
                     )
 
@@ -156,6 +167,10 @@ class ShineData(object):
                     group = article['kwd-group'].setdefault(keyword['l'], [])
                     group.append(keyword['k'])
 
+        # Journal WoS Subjects
+        if 'v584' in self.data['title']:
+            article['journal-subjects'] = self.data['title']['v584']
+
         return article
 
     @property
@@ -172,6 +187,12 @@ class ShineData(object):
                 citation['publication-type'] = 'book'
             elif 'v12' in data:
                 citation['publication-type'] = 'article'
+            elif 'v53' in data:
+                citation['publication-type'] = 'conference'
+            elif 'v45' in data:
+                citation['publication-type'] = 'thesis'
+            else:
+                citation['publication-type'] = 'nd'
 
             # Journal Title instead of Book title in source element.
             if 'v30' in data:
@@ -301,6 +322,9 @@ class ShineData(object):
 
             if 'v25' in data:
                 citation['series'] = data['v25'][0]['_']
+
+            if 'v62' in data:
+                citation['publisher-name'] = data['v62'][0]['_']
 
             # Publisher loc
             if 'v66' in data or 'v67' in data:

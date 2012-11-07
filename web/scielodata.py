@@ -1,5 +1,7 @@
 import json
 import os
+from lxml import etree
+
 from tornado import (
     httpserver,
     httpclient,
@@ -8,12 +10,14 @@ from tornado import (
     web,
     gen
     )
+
 from tornado.options import (
     define,
     options
     )
 import tornado
 import asyncmongo
+import choices
 from shiningdata import ShineData
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -46,6 +50,8 @@ class Application(tornado.web.Application):
                 for line in f:
                     prefix = line.split("|")
                     self.doi_prefix[prefix[0]] = prefix[1]
+
+        self.article_types = choices.article_types
 
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
@@ -126,13 +132,19 @@ class ArticleHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     @tornado.gen.engine
     def get(self):
+        self._is_xml = False
+
         def _on_response(response, error):
             if error:
                 raise tornado.web.HTTPError(500)
 
             if len(response) > 0:
                 if format == 'xml':
-                    shined_data = ShineData(response[0], doi_prefix=self.application.doi_prefix)
+                    self._is_xml = True
+                    shined_data = ShineData(response[0],
+                                            doi_prefix=self.application.doi_prefix,
+                                            article_types=self.application.article_types
+                                            )
 
                     self.set_header('Content-Type', 'application/xml')
                     self.render('scielo.xml',
@@ -147,6 +159,16 @@ class ArticleHandler(tornado.web.RequestHandler):
         code = self.get_argument('code')
         format = self.get_argument('format')
         self.db.articles.find({"code": code}, {"_id": 0}, limit=1, callback=_on_response)
+
+    def finish(self, chunk=None):
+        if self._is_xml == True:
+            try:
+                p = etree.XMLParser(remove_blank_text=True)
+                chunk = etree.tostring(etree.XML(chunk, parser=p))
+            except:
+                pass
+        tornado.web.RequestHandler.finish(self, chunk)
+
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
