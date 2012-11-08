@@ -31,17 +31,18 @@ class ShineData(object):
         if 'v237' in self.data['article']:
             article['article-id-doi'] = self.data['article']['v237'][0]['_']
         else:
-            if self.doi_prefix and article['scielo-url'] in self.doi_prefix:
-                if 'v881' in self.data['article']:
-                    article['article-id-doi'] = "{0}/{1}".format(
-                        self.doi_prefix[article['scielo-url']],
-                        self.data['article']['v881'][0]['_'].upper()
-                    )
-                else:
-                    article['article-id-doi'] = "{0}/{1}".format(
-                        self.doi_prefix[article['scielo-url']],
-                        self.data['article']['v880'][0]['_'].upper()
-                    )
+            if 'scielo-url' in article:
+                if self.doi_prefix and article['scielo-url'] in self.doi_prefix:
+                    if 'v881' in self.data['article']:
+                        article['article-id-doi'] = "{0}/{1}".format(
+                            self.doi_prefix[article['scielo-url']],
+                            self.data['article']['v881'][0]['_'].upper()
+                        )
+                    else:
+                        article['article-id-doi'] = "{0}/{1}".format(
+                            self.doi_prefix[article['scielo-url']],
+                            self.data['article']['v880'][0]['_'].upper()
+                        )
 
         if 'v100' in self.data['title']:
             article['journal-title'] = self.data['title']['v100'][0]['_']
@@ -168,8 +169,8 @@ class ShineData(object):
                     group.append(keyword['k'])
 
         # Journal WoS Subjects
-        if 'v584' in self.data['title']:
-            article['journal-subjects'] = self.data['title']['v584']
+        if 'v854' in self.data['title']:
+            article['journal-subjects'] = self.data['title']['v854']
 
         return article
 

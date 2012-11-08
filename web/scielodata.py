@@ -33,6 +33,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/api/v1/article", ArticleHandler),
+            (r"/api/v1/issue", IssueHandler),
             (r"/api/v1/is_loaded", IsLoadedHandler),
        ]
 
@@ -88,6 +89,71 @@ class IsLoadedHandler(tornado.web.RequestHandler):
         self.db.articles.find({"code": code}, limit=1, callback=self._on_get_response)
 
 
+class IssueHandler(tornado.web.RequestHandler):
+
+    def _remove_callback(self, response, error):
+        pass
+
+    def _on_get_response(self, response, error):
+        if error:
+            raise tornado.web.HTTPError(500)
+
+        if len(response) > 0:
+            self.render('scielo.xml')
+
+    @property
+    def db(self):
+        self._db = self.application.db
+        return self._db
+
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def get(self):
+        self._is_xml = False
+
+        def _on_response(response, error):
+            if error:
+                raise tornado.web.HTTPError(500)
+
+            if len(response) > 0:
+                if format == 'xml':
+                    self._is_xml = True
+
+                    shined_docs = []
+                    for doc in response:
+                        shined_doc = ShineData(doc,
+                                                doi_prefix=self.application.doi_prefix,
+                                                article_types=self.application.article_types
+                                                )
+                        shined_docs.append(shined_doc)
+
+                    #import pdb; pdb.set_trace()
+                    self.set_header('Content-Type', 'application/xml')
+                    self.render('scielo.xml',
+                        code=code,
+                        docs=shined_docs
+                    )
+                else:
+                    self.write(str(response))
+                    self.finish()
+            else:
+                self.write('There is no data for this query!')
+                self.finish()
+
+        code = self.get_argument('code')
+        format = self.get_argument('format')
+        self.db.articles.find({"code_issue": code}, {"_id": 0}, callback=_on_response)
+
+    def finish(self, chunk=None):
+        if self._is_xml == True:
+            try:
+                p = etree.XMLParser(remove_blank_text=True)
+                chunk = etree.tostring(etree.XML(chunk, parser=p))
+            except:
+                pass
+        tornado.web.RequestHandler.finish(self, chunk)
+
+
 class ArticleHandler(tornado.web.RequestHandler):
 
     def _remove_callback(self, response, error):
@@ -99,9 +165,6 @@ class ArticleHandler(tornado.web.RequestHandler):
 
         if len(response) > 0:
             self.render('scielo.xml')
-            #self.write(str(response[0]))
-
-        #self.finish()
 
     @property
     def db(self):
@@ -141,20 +204,26 @@ class ArticleHandler(tornado.web.RequestHandler):
             if len(response) > 0:
                 if format == 'xml':
                     self._is_xml = True
-                    shined_data = ShineData(response[0],
-                                            doi_prefix=self.application.doi_prefix,
-                                            article_types=self.application.article_types
-                                            )
+                    shined_docs = []
+
+                    for doc in response:
+                        shined_doc = ShineData(doc,
+                                                doi_prefix=self.application.doi_prefix,
+                                                article_types=self.application.article_types
+                                                )
+                        shined_docs.append(shined_doc)
 
                     self.set_header('Content-Type', 'application/xml')
                     self.render('scielo.xml',
                         code=code,
-                        article=shined_data.article,
-                        citations=shined_data.citations
+                        docs=shined_docs
                     )
                 else:
                     self.write(str(response[0]))
                     self.finish()
+            else:
+                self.write('There is no data for this query!')
+                self.finish()
 
         code = self.get_argument('code')
         format = self.get_argument('format')
