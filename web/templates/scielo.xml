@@ -42,7 +42,7 @@
                     <article-categories>
                         <subj-group>
                             {% for subj in article['journal-subjects'] %}
-                                <subject>{{ subj }}</subject>
+                                <subject>{{ subj['_'] }}</subject>
                             {% end %}
                         </subj-group>
                     </article-categories>
