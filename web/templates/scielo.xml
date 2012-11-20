@@ -33,6 +33,7 @@
                 {% end %}
             </journal-meta>
             <article-meta>
+                <unique-article-id>{{ article['article-id'] }}</unique-article-id>
                 <article-id pub-id-type="publisher-id">{{ article['article-id'] }}</article-id>
                 {% if 'article-id-doi' in article %}
                     <article-id pub-id-type="doi">{{ article['article-id-doi'] }}</article-id>
