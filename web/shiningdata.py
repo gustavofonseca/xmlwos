@@ -67,10 +67,12 @@ class ShineData(object):
 
         # Supplement
         if 'v131' in self.data['article'] or 'v132' in self.data['article']:
+            supplv = u' '
+            suppln = u' '
             if 'v131' in self.data['article']:
                 supplv = u"v. " + self.data['article']['v131'][0]['_']
             if 'v132' in self.data['article']:
-                suppln = u"i. " + self.data['article']['v132'][0]['_']
+                suppln = u"n. " + self.data['article']['v132'][0]['_']
 
             article['supplement'] = "Suppl. {0} {1}".format(supplv, suppln)
 
@@ -85,15 +87,17 @@ class ShineData(object):
         article['group-title'] = {}
         article['group-title']['article-title'] = {}
         article['group-title']['trans-title'] = {}
-        for title in self.data['article']['v12']:
-            if title['l'] == article['original_language']:
-                article['group-title']['article-title'].setdefault(title['l'],
-                    title['_']
-                    )
-            else:
-                article['group-title']['trans-title'].setdefault(title['l'],
-                    title['_']
-                    )
+
+        if 'v12' in self.data['article']:
+            for title in self.data['article']['v12']:
+                if title['l'] == article['original_language']:
+                    article['group-title']['article-title'].setdefault(title['l'],
+                        title['_']
+                        )
+                else:
+                    article['group-title']['trans-title'].setdefault(title['l'],
+                        title['_']
+                        )
 
         # Authors
         if 'v10' in self.data['article']:
@@ -170,7 +174,12 @@ class ShineData(object):
 
         # Journal WoS Subjects
         if 'v854' in self.data['title']:
-            article['journal-subjects'] = self.data['title']['v854']
+            article['journal-subjects'] = []
+            for subject in self.data['title']['v854']:
+                if '_' in subject:
+                    article['journal-subjects'].append(subject['_'])
+                else:
+                    article['journal-subjects'].append(subject)
 
         return article
 
