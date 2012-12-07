@@ -7,7 +7,7 @@
        xmlns:xlink="http://www.w3.org/1999/xlink" 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        article-type="{{ article['article_type'] }}"
-       xml:lang="{{ original_language }}">
+       lang_id="{{ original_language }}">
        <front>
             <journal-meta>
                 <journal-id journal-id-type="publisher">{{ article['journal-id'] }}</journal-id>
@@ -49,10 +49,10 @@
                  {% end %}
                 <title-group>
                     {% for lang, title in article['group-title']['article-title'].items() %}
-                        <article-title xml:lang="{{ lang }}">{{ title }}</article-title>
+                        <article-title lang_id="{{ lang }}">{{ title }}</article-title>
                     {% end %}
                     {% for lang, title in  article['group-title']['trans-title'].items() %}
-                        <trans-title-group xml:lang="{{ lang }}">
+                        <trans-title-group lang_id="{{ lang }}">
                             <trans-title>{{ title }}</trans-title>
                         </trans-title-group>
                     {% end %}
@@ -130,15 +130,15 @@
                 {% end %}
                 {% if 'group-abstract' in article %}
                     {% for lang, abstract in article['group-abstract']['abstract'].items() %}
-                        <abstract xml:lang="{{ lang }}"><p>{{ abstract }}</p></abstract>
+                        <abstract lang_id="{{ lang }}"><p>{{ abstract }}</p></abstract>
                     {% end %}
                     {% for lang, abstract in  article['group-abstract']['trans-abstract'].items() %}
-                        <trans-abstract xml:lang="{{ lang }}"><p>{{ abstract }}</p></trans-abstract>
+                        <trans-abstract lang_id="{{ lang }}"><p>{{ abstract }}</p></trans-abstract>
                     {% end %}
                 {% end %}
                 {% if 'kwd-group' in article %}
                     {% for group, keywords in article['kwd-group'].items() %}
-                        <kwd-group xml:lang="{{ group }}" kwd-group-type="author-generated">
+                        <kwd-group lang_id="{{ group }}" kwd-group-type="author-generated">
                             {% for keyword in keywords %}
                                 <kwd>{{ keyword }}</kwd>
                             {% end %}
