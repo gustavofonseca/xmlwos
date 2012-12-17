@@ -143,9 +143,9 @@ class ShineData(object):
         # Url
         if 'scielo-url' in article:
             article['self-uri'] = {}
-            article['self-uri']['full-text-page'] = "http://{0}/scielo.php?script=sci_arttext&amp;pid={1}&amp;lng=en&amp;tlng=en".format(article['scielo-url'], article['article-id'])
-            article['self-uri']['issue-page'] = "http://{0}/scielo.php?script=sci_issuetoc&amp;pid={1}&amp;lng=en&amp;tlng=en".format(article['scielo-url'], article['article-id'][0:18])
-            article['self-uri']['journal-page'] = "http://{0}/scielo.php?script=sci_serial&amp;pid={1}&amp;lng=en&amp;tlng=en".format(article['scielo-url'], article['article-id'][1:10])
+            article['self-uri']['full-text-page'] = "http://{0}/scielo.php?script=sci_arttext&pid={1}&lng=en&tlng=en".format(article['scielo-url'], article['article-id'])
+            article['self-uri']['issue-page'] = "http://{0}/scielo.php?script=sci_issuetoc&pid={1}&lng=en&tlng=en".format(article['scielo-url'], article['article-id'][0:18])
+            article['self-uri']['journal-page'] = "http://{0}/scielo.php?script=sci_serial&pid={1}&lng=en&tlng=en".format(article['scielo-url'], article['article-id'][1:10])
 
         # Abstract
         if 'v83' in self.data['article']:
