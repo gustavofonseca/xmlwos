@@ -154,16 +154,17 @@ class ShineData(object):
             article['group-abstract']['abstract'] = {}
             article['group-abstract']['trans-abstract'] = {}
             for abstract in self.data['article']['v83']:
-                if abstract['l'] == article['original_language']:
-                    article['group-abstract']['abstract'].setdefault(
-                        abstract['l'],
-                        abstract['a']
-                        )
-                else:
-                    article['group-abstract']['trans-abstract'].setdefault(
-                        abstract['l'],
-                        abstract['a']
-                        )
+                if 'a' in abstract:  # Validating this, because some original 'isis' records doesn't have the abstract driving the tool to an unexpected error: ex. S0066-782X2012001300004
+                    if abstract['l'] == article['original_language']:
+                        article['group-abstract']['abstract'].setdefault(
+                            abstract['l'],
+                            abstract['a']
+                            )
+                    else:
+                        article['group-abstract']['trans-abstract'].setdefault(
+                            abstract['l'],
+                            abstract['a']
+                            )
 
         # Keyword
         if 'v85' in self.data['article']:
