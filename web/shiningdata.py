@@ -122,7 +122,7 @@ class ShineData(object):
             for affiliation in self.data['article']['v70']:
                 affdict = {}
                 if '_' in affiliation:
-                    if affiliation['_'].strip() != None:
+                    if affiliation['_'].strip().len > 0:
                         affdict['institution'] = affiliation['_']
                         if 'i' in affiliation:
                             affdict['index'] = affiliation['i']
