@@ -170,7 +170,7 @@ class ShineData(object):
         if 'v85' in self.data['article']:
             article['kwd-group'] = {}
             for keyword in self.data['article']['v85']:
-                if 'k' in keyword:
+                if 'k' in keyword and 'l' in keyword:
                     group = article['kwd-group'].setdefault(keyword['l'], [])
                     group.append(keyword['k'])
 
