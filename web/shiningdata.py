@@ -125,6 +125,8 @@ class ShineData(object):
                     affdict['institution'] = affiliation['_']
                     if 'i' in affiliation:
                         affdict['index'] = affiliation['i']
+                    else:
+                        affdict['index'] = 'nd'
                     if 'c' in affiliation:
                         affdict['addr-line'] = affiliation['c']
                     if 'p' in affiliation:
