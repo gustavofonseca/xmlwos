@@ -119,23 +119,19 @@ class ShineData(object):
         # Affiliations
         if 'v70' in self.data['article']:
             article['aff-group'] = []
-            nd = 0
             for affiliation in self.data['article']['v70']:
                 affdict = {}
-                if 'i' in affiliation:
-                    affdict['index'] = affiliation['i']
-                else:
-                    affdict['index'] = 'nd{0}'.format(nd)
-                    nd += 1
-                if 'c' in affiliation:
-                    affdict['addr-line'] = affiliation['c']
                 if '_' in affiliation:
                     affdict['institution'] = affiliation['_']
-                if 'p' in affiliation:
-                    affdict['country'] = affiliation['p']
-                if 'e' in affiliation:
-                    affdict['email'] = affiliation['e']
-                article['aff-group'].append(affdict)
+                    if 'i' in affiliation:
+                        affdict['index'] = affiliation['i']
+                    if 'c' in affiliation:
+                        affdict['addr-line'] = affiliation['c']
+                    if 'p' in affiliation:
+                        affdict['country'] = affiliation['p']
+                    if 'e' in affiliation:
+                        affdict['email'] = affiliation['e']
+                    article['aff-group'].append(affdict)
 
         # Publication date
         article['pub-date'] = {}
