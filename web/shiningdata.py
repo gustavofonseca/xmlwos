@@ -119,9 +119,14 @@ class ShineData(object):
         # Affiliations
         if 'v70' in self.data['article']:
             article['aff-group'] = []
+            nd = 0
             for affiliation in self.data['article']['v70']:
                 affdict = {}
-                affdict['index'] = affiliation['i']
+                if 'i' in affiliation:
+                    affdict['index'] = affiliation['i']
+                else:
+                    affdict['index'] = 'nd{0}'.format(nd)
+                    nd += 1
                 if 'c' in affiliation:
                     affdict['addr-line'] = affiliation['c']
                 if '_' in affiliation:
