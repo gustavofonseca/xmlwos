@@ -5,7 +5,6 @@ import urllib2
 
 schema = StringIO(open('ThomsonReuters_publishing_1.04.xsd').read())
 xml = StringIO(unicode(urllib2.urlopen(sys.argv[1]).read(), 'iso-8859-1'))
-print xml
 xmlschema_doc = etree.parse(schema)
 xmlschema = etree.XMLSchema(xmlschema_doc)
 
