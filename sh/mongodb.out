@@ -1,9 +1,0 @@
-Thu Sep 20 14:35:26 [initandlisten] MongoDB starting : pid=76928 port=28018 dbpath=../databases/mongodb 64-bit host=FabioBatalha.local
-Thu Sep 20 14:35:26 [initandlisten] db version v2.0.7, pdfile version 4.5
-Thu Sep 20 14:35:26 [initandlisten] git version: 875033920e8869d284f32119413543fa475227bf
-Thu Sep 20 14:35:26 [initandlisten] build info: Darwin bs-osx-106-x86-64-1.local 10.8.0 Darwin Kernel Version 10.8.0: Tue Jun  7 16:33:36 PDT 2011; root:xnu-1504.15.3~1/RELEASE_I386 i386 BOOST_LIB_VERSION=1_49
-Thu Sep 20 14:35:26 [initandlisten] options: { dbpath: "../databases/mongodb", port: 28018 }
-Thu Sep 20 14:35:26 [initandlisten] journal dir=../databases/mongodb/journal
-Thu Sep 20 14:35:26 [initandlisten] recover : no journal files present, no recovery needed
-Thu Sep 20 14:35:26 [websvr] admin web console waiting for connections on port 29018
-Thu Sep 20 14:35:26 [initandlisten] waiting for connections on port 28018
