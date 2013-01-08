@@ -17,7 +17,7 @@ do
         echo "Creating master files for "$iso
         dot_iso=`expr index "$iso" 1.`-1
         database_name=${iso:0:$dot_iso}
-        $cisis_dir/mx iso=../../iso/$coll/$iso append=../../databases/isis/$database_name -all now
+        $cisis_dir/mx iso=../iso/$coll/$iso append=../../databases/isis/$database_name -all now
     done
 done
 
