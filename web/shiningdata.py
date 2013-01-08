@@ -18,11 +18,12 @@ class ShineData(object):
         # Defining Article type according to dict defined into choices.py
         if 'v71' in self.data['article']:
             article_type_code = self.data['article']['v71'][0]['_']
-
             if article_type_code in self.article_types:
                 article['article_type'] = self.article_types[article_type_code]
             else:
                 article['article_type'] = self.article_types['nd']
+        else:
+            article['article_type'] = self.article_types['nd']
 
         if 'v690' in self.data['title']:
             article['scielo-url'] = self.data['title']['v690'][0]['_']
