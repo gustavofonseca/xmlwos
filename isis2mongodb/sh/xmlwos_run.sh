@@ -4,9 +4,9 @@ echo "Script running with CISIS version:"
 $cisis_dir/mx what
 
 colls=`ls -1 ../iso`
-rm -f ../databases/artigo.*
-rm -f ../databases/title.*
-rm -f ../databases/bib4cit.*
+rm -f ../../databases/isis/artigo.*
+rm -f ../../databases/isis/title.*
+rm -f ../../databases/isis/bib4cit.*
 
 for coll in $colls;
 do
@@ -17,14 +17,14 @@ do
         echo "Creating master files for "$iso
         dot_iso=`expr index "$iso" 1.`-1
         database_name=${iso:0:$dot_iso}
-        $cisis_dir/mx iso=../iso/$coll/$iso append=../databases/$database_name -all now
+        $cisis_dir/mx iso=../../iso/$coll/$iso append=../../databases/isis/$database_name -all now
     done
 done
 
 echo "Indexing databases according to FSTs"
-$cisis_dir/mx ../databases/artigo  fst="@../fst/artigo.fst"  fullinv/ansi=../databases/artigo  tell=1000  -all now
-$cisis_dir/mx ../databases/title   fst="@../fst/title.fst"   fullinv/ansi=../databases/title   tell=10    -all now
-$cisis_dir/mx ../databases/bib4cit fst="@../fst/bib4cit.fst" fullinv/ansi=../databases/bib4cit tell=10000 -all now
+$cisis_dir/mx ../../databases/isis/artigo  fst="@../fst/artigo.fst"  fullinv/ansi=../../databases/isis/artigo  tell=1000  -all now
+$cisis_dir/mx ../../databases/isis/title   fst="@../fst/title.fst"   fullinv/ansi=../../databases/isis/title   tell=10    -all now
+$cisis_dir/mx ../../databases/isis/bib4cit fst="@../fst/bib4cit.fst" fullinv/ansi=../../databases/isis/bib4cit tell=10000 -all now
 
 echo "Creating articles processing list"
 from=$1
@@ -40,7 +40,7 @@ if [[ $count != "" ]]; then
 fi
 
 articles_processing_list="aplf"$from"c"$count".txt"
-$cisis_dir/mx ../databases/artigo "pft=if p(v880) then,v880,fi,/" $range -all now > ../tmp/$articles_processing_list
+$cisis_dir/mx ../../databases/isis/artigo "pft=if p(v880) then,v880,fi,/" $range -all now > ../tmp/$articles_processing_list
 
 echo "Creating json files for each article"
 mkdir -p ../output/isos/
@@ -54,9 +54,9 @@ do
     loaded=`curl -s -X GET "http://"$scielo_data_url"/api/v1/is_loaded?code="$pid`
     if [[ $loaded == "False" ]]; then
         mkdir -p ../output/isos/$pid
-        $cisis_dir/mx ../databases/artigo  btell="0" pid=$pid   iso=../output/isos/$pid/$pid"_artigo.iso" -all now
-        $cisis_dir/mx ../databases/title   btell="0" ${pid:1:9} iso=../output/isos/$pid/$pid"_title.iso" -all now
-        $cisis_dir/mx ../databases/bib4cit btell="0" $pid"$"    iso=../output/isos/$pid/$pid"_bib4cit.iso" -all now
+        $cisis_dir/mx ../databases/isis/artigo  btell="0" pid=$pid   iso=../output/isos/$pid/$pid"_artigo.iso" -all now
+        $cisis_dir/mx ../databases/isis/title   btell="0" ${pid:1:9} iso=../output/isos/$pid/$pid"_title.iso" -all now
+        $cisis_dir/mx ../databases/isis/bib4cit btell="0" $pid"$"    iso=../output/isos/$pid/$pid"_bib4cit.iso" -all now
 
         python isis2json.py ../output/isos/$pid/$pid"_artigo.iso" -c -p v -t 3 > ../output/isos/$pid/$pid"_artigo.json"
         python isis2json.py ../output/isos/$pid/$pid"_title.iso" -c -p v -t 3 > ../output/isos/$pid/$pid"_title.json"
