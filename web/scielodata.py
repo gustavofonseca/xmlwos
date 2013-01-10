@@ -89,6 +89,26 @@ class IsLoadedHandler(tornado.web.RequestHandler):
         self.db.articles.find({"code": code}, limit=1, callback=self._on_get_response)
 
 
+class IssuesHandler(tornado.web.RequestHandler):
+
+    def callback(self, response, error):
+        if error:
+            raise tornado.web.HTTPError(500)
+
+        self.write(response)
+        self.finish()
+
+    @property
+    def db(self):
+        self._db = self.application.db
+        return self._db
+
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def get(self):
+        self.db.command('distinct', 'articles', key='code_issue', callback=self.callback)
+
+
 class IssueHandler(tornado.web.RequestHandler):
 
     def _remove_callback(self, response, error):
