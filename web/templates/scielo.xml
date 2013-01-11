@@ -1,13 +1,12 @@
-<articles>
+<articles xmlns:xlink="http://www.w3.org/1999/xlink" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          dtd-version="1.05">
 {% for doc in docs %}
     {% set article = doc.article %}
     {% set citations = doc.citations %}
     {% set original_language = article['original_language'] %}    
-    <article dtd-version="3.0"
-       xmlns:xlink="http://www.w3.org/1999/xlink" 
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       article-type="{{ article['article_type'] }}"
-       lang_id="{{ original_language }}">
+    <article article-type="{{ article['article_type'] }}"
+             lang_id="{{ original_language }}">
        <front>
             <journal-meta>
                 <journal-id journal-id-type="publisher">{{ article['journal-id'] }}</journal-id>
@@ -124,9 +123,9 @@
                     <lpage>{{ article['lpage'] }}</lpage>
                 {% end %}
                 {% if 'self-uri' in article %}
-                <self-uri xlink:href="{{ article['self-uri']['full-text-page'] }}" content-type="full_text_page">Full Text</self-uri>
-                <self-uri xlink:href="{{ article['self-uri']['issue-page'] }}" content-type="issue_page">Issue Page</self-uri>
-                <self-uri xlink:href="{{ article['self-uri']['journal-page'] }}" content-type="journal_page">Journal Page</self-uri>
+                <self-uri href="{{ article['self-uri']['full-text-page'] }}" content-type="full_text_page">Full Text</self-uri>
+                <self-uri href="{{ article['self-uri']['issue-page'] }}" content-type="issue_page">Issue Page</self-uri>
+                <self-uri href="{{ article['self-uri']['journal-page'] }}" content-type="journal_page">Journal Page</self-uri>
                 {% end %}
                 {% if 'group-abstract' in article %}
                     {% for lang, abstract in article['group-abstract']['abstract'].items() %}
