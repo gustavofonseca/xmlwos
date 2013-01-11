@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- edited with XMLSpy v2009 (http://www.altova.com) by JULIE EVENSON (THOMSON SCIENTIFIC INC) -->
 <!-- CONFIDENTIAL Thomson Reuters 2012 -->
-<!-- Version 1.04 -->
+<!-- Version 1.05 -->
 <xs:schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" elementFormDefault="qualified">
 	<xs:import namespace="http://www.w3.org/1998/Math/MathML" schemaLocation="ncbi-mathml2/mathml2.xsd"/>
 	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
@@ -12,6 +12,7 @@
 			<xs:sequence maxOccurs="unbounded">
 				<xs:element ref="article"/>
 			</xs:sequence>
+			<xs:attribute ref="dtd-version"/>
 		</xs:complexType>
 		<xs:unique name="unique_article_id">
 			<xs:selector xpath="article"/>
@@ -4638,17 +4639,18 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
-			<xs:attribute name="dtd-version" default="1.04">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="1.03"/>
-						<xs:enumeration value="1.04"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
+			<xs:attribute ref="dtd-version"/>
 			<xs:attribute ref="lang_id" use="required"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:attribute name="dtd-version" default="1.05">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="1.04"/>
+						<xs:enumeration value="1.05"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 	<xs:element name="front">
 		<xs:complexType>
 			<xs:sequence>
