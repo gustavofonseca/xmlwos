@@ -4639,7 +4639,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute ref="dtd-version"/>
-			<xs:attribute ref="lang_id"/>
+			<xs:attribute ref="lang_id" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:attribute name="dtd-version" default="1.05">
