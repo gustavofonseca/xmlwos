@@ -15,7 +15,7 @@ def get_collection(mongodb_host='localhost',
     return coll
 
 
-def validate_xml(article_id):
+def validate_xml(article_id, api_host='localhost', api_port='7000'):
     """
     Validate article agains WOS Schema. Flaging his attribute validated_scielo to True if
     the document is valid.
@@ -23,9 +23,9 @@ def validate_xml(article_id):
     xsd = open('ThomsonReuters_publishing.xsd', 'r').read()
     sch = Schema(xsd)
 
-    xml_url = 'http://200.136.72.76:7000/api/v1/article?code={0}&format=xml'.format(article_id)
+    xml_url = 'http://{0}:{1}/api/v1/article?code={2}&format=xml'.format(api_host, api_port, article_id)
 
-    xml = urllib2.urlopen(xml_url, timeout=2).read()
+    xml = urllib2.urlopen(xml_url, timeout=3).read()
 
     result = sch.validate(xml)
 

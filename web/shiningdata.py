@@ -321,8 +321,8 @@ class ShineData(object):
                         authordict['surname'] = author['s']
                     if 'n' in author:
                         authordict['given-names'] = author['n']
-
-                    citation['person-group'].append(authordict)
+                    if 's' in author or 'n' in author:
+                        citation['person-group'].append(authordict)
 
             # Authors monographic
             if 'v16' in data:
@@ -332,8 +332,12 @@ class ShineData(object):
                         authordict['surname'] = author['s']
                     if 'n' in author:
                         authordict['given-names'] = author['n']
+                    if 's' in author or 'n' in author:
+                        citation['person-group'].append(authordict)
 
-                    citation['person-group'].append(authordict)
+            if 'person-group' in citation:
+                if not len(citation['person-group']) > 0:
+                    del citation['person-group']
 
             if 'v25' in data:
                 citation['series'] = data['v25'][0]['_']
