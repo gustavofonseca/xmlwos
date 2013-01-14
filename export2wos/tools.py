@@ -15,11 +15,6 @@ def get_collection(mongodb_host='localhost',
     return coll
 
 
-def find(fltr, collection, skip, limit):
-    for article in collection.find(fltr, {'code': 1}).skip(skip).limit(limit):
-        yield article['code']
-
-
 def validate_xml(article_id):
     """
     Validate article agains WOS Schema. Flaging his attribute validated_scielo to True if
@@ -38,6 +33,11 @@ def validate_xml(article_id):
         return result
     else:
         return sch.get_validation_errors(xml)
+
+
+def find(fltr, collection, skip, limit):
+    for article in collection.find(fltr, {'code': 1}).skip(skip).limit(limit):
+        yield article['code']
 
 
 def not_validated(collection, journal_issn=None, skip=0, limit=10):

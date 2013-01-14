@@ -2,8 +2,7 @@
 <!-- edited with XMLSpy v2009 (http://www.altova.com) by JULIE EVENSON (THOMSON SCIENTIFIC INC) -->
 <!-- CONFIDENTIAL Thomson Reuters 2012 -->
 <!-- Version 1.05 -->
-<xs:schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" elementFormDefault="qualified">
-	<xs:import namespace="http://www.w3.org/1998/Math/MathML" schemaLocation="ncbi-mathml2/mathml2.xsd"/>
+<xs:schema xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" elementFormDefault="qualified">
 	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
 	<!-- XSD import of namespace  suppressed -->
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
@@ -46,7 +45,7 @@
 			</xs:sequence>
 			<xs:attribute name="license-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -69,7 +68,7 @@
 			<xs:simpleContent>
 				<xs:extension base="xs:string">
 					<xs:attribute name="id" type="xs:ID"/>
-					<xs:attribute ref="lang_id" use="required"/>
+					<xs:attribute ref="lang_id"/>
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
@@ -96,7 +95,7 @@
 			<xs:attribute name="collab-type"/>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -182,7 +181,7 @@
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="content-type"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="trans-subtitle">
@@ -209,7 +208,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -373,7 +372,7 @@
 			<xs:attribute name="publisher-type"/>
 			<xs:attribute name="publication-format"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -413,7 +412,7 @@
 			<xs:attribute name="content-type"/>
 			<xs:attribute name="specific-use"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -430,7 +429,7 @@
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="content-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -446,7 +445,7 @@
 		<xs:complexType mixed="true">
 			<xs:attribute name="content-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -552,7 +551,7 @@
 			<xs:attribute name="ext-link-type"/>
 			<xs:attribute name="specific-use"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -583,7 +582,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -713,7 +712,7 @@
 			<xs:attribute name="journal-id"/>
 			<xs:attribute name="journal-id-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -817,7 +816,7 @@
 					<xs:element ref="def-list"/>
 					<xs:element ref="list"/>
 					<xs:element ref="tex-math"/>
-					<xs:element ref="mml:math"/>
+					<!--xs:element ref="mml:math"/-->
 					<xs:element ref="related-article"/>
 					<xs:element ref="related-object"/>
 					<xs:element ref="disp-quote"/>
@@ -837,7 +836,7 @@
 			<xs:attribute name="content-type"/>
 			<xs:attribute name="specific-use"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -881,7 +880,7 @@
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="specific-use"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -913,7 +912,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -942,7 +941,7 @@
 				<xs:element ref="supplementary-material"/>
 				<xs:element ref="table"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -961,7 +960,7 @@
 				<xs:element ref="inline-graphic"/>
 				<xs:element ref="private-char"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="named-content"/>
 				<xs:element ref="styled-content"/>
 				<xs:element ref="sub"/>
@@ -1230,7 +1229,7 @@
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="product-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -1256,7 +1255,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -1300,7 +1299,7 @@
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="abstract-type"/>
 			<xs:attribute name="specific-use"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="kwd-group">
@@ -1327,7 +1326,7 @@
 			</xs:sequence>
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="kwd-group-type"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="kwd">
@@ -1428,7 +1427,7 @@
 			</xs:sequence>
 			<xs:attribute name="content-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -1564,7 +1563,7 @@
 	<xs:element name="subtitle">
 		<xs:complexType mixed="true">
 			<xs:attribute name="content-type"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="alt-title">
@@ -1574,7 +1573,7 @@
 					<xs:documentation>Assume that these are always item titles with different languages</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 		<!--this element holds all the alternate item titles-->
 	</xs:element>
@@ -1635,7 +1634,7 @@
 			</xs:attribute>
 			<xs:attribute name="rid" type="xs:IDREFS"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -1706,7 +1705,7 @@
 					<xs:element ref="def-list"/>
 					<xs:element ref="list"/>
 					<xs:element ref="tex-math"/>
-					<xs:element ref="mml:math"/>
+					<!--xs:element ref="mml:math"/-->
 					<xs:element ref="related-article"/>
 					<xs:element ref="related-object"/>
 					<xs:element ref="disp-quote"/>
@@ -1756,7 +1755,7 @@
 						<xs:element ref="def-list"/>
 						<xs:element ref="list"/>
 						<xs:element ref="tex-math"/>
-						<xs:element ref="mml:math"/>
+						<!--xs:element ref="mml:math"/-->
 						<xs:element ref="related-article"/>
 						<xs:element ref="related-object"/>
 						<xs:element ref="disp-quote"/>
@@ -1815,7 +1814,7 @@
 					<xs:element ref="def-list"/>
 					<xs:element ref="list"/>
 					<xs:element ref="tex-math"/>
-					<xs:element ref="mml:math"/>
+					<!--xs:element ref="mml:math"/-->
 					<xs:element ref="related-article"/>
 					<xs:element ref="related-object"/>
 					<xs:element ref="disp-quote"/>
@@ -1894,7 +1893,7 @@
 					<xs:element ref="def-list"/>
 					<xs:element ref="list"/>
 					<xs:element ref="tex-math"/>
-					<xs:element ref="mml:math"/>
+					<!--xs:element ref="mml:math"/-->
 					<xs:element ref="related-article"/>
 					<xs:element ref="related-object"/>
 					<xs:element ref="disp-quote"/>
@@ -2006,7 +2005,7 @@
 				<xs:element ref="def-list"/>
 				<xs:element ref="list"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="named-content"/>
 				<xs:element ref="styled-content"/>
 				<xs:element ref="alternatives"/>
@@ -2024,7 +2023,7 @@
 			<xs:attribute name="content-type"/>
 			<xs:attribute name="specific-use"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -2357,7 +2356,7 @@
 			<xs:attribute name="mimetype"/>
 			<xs:attribute name="mime-subtype"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -2501,7 +2500,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2539,7 +2538,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2577,7 +2576,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2615,7 +2614,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2653,7 +2652,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2691,7 +2690,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2729,7 +2728,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2767,7 +2766,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2829,7 +2828,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -2897,7 +2896,7 @@
 			<xs:attribute name="rid" type="xs:IDREFS"/>
 			<xs:attribute name="award-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -2911,7 +2910,7 @@
 			<xs:attribute name="source-type"/>
 			<xs:attribute name="country"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -3102,7 +3101,7 @@
 			<xs:attribute name="mimetype"/>
 			<xs:attribute name="mime-subtype"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -3151,7 +3150,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -3189,7 +3188,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -3236,7 +3235,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -3304,7 +3303,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="named-content"/>
 				<xs:element ref="styled-content"/>
 				<xs:element ref="sub"/>
@@ -3341,7 +3340,7 @@
 				<xs:element ref="named-content"/>
 				<xs:element ref="styled-content"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="alternatives"/>
 				<xs:element ref="array"/>
 				<xs:element ref="graphic"/>
@@ -3444,7 +3443,7 @@
 			<xs:attribute name="publisher-type"/>
 			<xs:attribute name="publication-format"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -3488,7 +3487,7 @@
 					<xs:element ref="def-list"/>
 					<xs:element ref="list"/>
 					<xs:element ref="tex-math"/>
-					<xs:element ref="mml:math"/>
+					<!--xs:element ref="mml:math"/-->
 					<xs:element ref="related-article"/>
 					<xs:element ref="related-object"/>
 					<xs:element ref="disp-quote"/>
@@ -3607,7 +3606,7 @@
 			<xs:attribute name="id" type="xs:ID"/>
 			<xs:attribute name="content-type"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -3641,7 +3640,7 @@
 			<xs:attribute name="content-type" use="required"/>
 			<xs:attribute name="specific-use"/>
 			<xs:attribute ref="xlink:type"/>
-			<xs:attribute ref="xlink:href"/>
+			<xs:attribute name="href"/>
 			<xs:attribute ref="xlink:role"/>
 			<xs:attribute ref="xlink:title"/>
 			<xs:attribute ref="xlink:show"/>
@@ -3688,7 +3687,7 @@
 				<xs:element ref="def-list"/>
 				<xs:element ref="list"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -3813,7 +3812,7 @@
 				<xs:element ref="chem-struct"/>
 				<xs:element ref="inline-formula"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -4413,7 +4412,7 @@
 				<xs:element ref="def-list"/>
 				<xs:element ref="list"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -4504,7 +4503,7 @@
 				<xs:element ref="def-list"/>
 				<xs:element ref="list"/>
 				<xs:element ref="tex-math"/>
-				<xs:element ref="mml:math"/>
+				<!--xs:element ref="mml:math"/-->
 				<xs:element ref="abbrev"/>
 				<xs:element ref="milestone-end"/>
 				<xs:element ref="milestone-start"/>
@@ -4640,7 +4639,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute ref="dtd-version"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:attribute name="dtd-version" default="1.05">
@@ -4682,7 +4681,7 @@
 					<xs:element ref="def-list"/>
 					<xs:element ref="list"/>
 					<xs:element ref="tex-math"/>
-					<xs:element ref="mml:math"/>
+					<!--xs:element ref="mml:math"/-->
 					<xs:element ref="related-article"/>
 					<xs:element ref="related-object"/>
 					<xs:element ref="disp-quote"/>
@@ -4719,7 +4718,7 @@
 			</xs:sequence>
 			<xs:attribute name="article-type"/>
 			<xs:attribute name="id" type="xs:ID"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="front-stub">
@@ -4786,7 +4785,7 @@
 			</xs:sequence>
 			<xs:attribute name="response-type"/>
 			<xs:attribute name="id" type="xs:ID"/>
-			<xs:attribute ref="lang_id" use="required"/>
+			<xs:attribute ref="lang_id"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:simpleType name="lang_id">
