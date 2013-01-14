@@ -356,6 +356,7 @@
 					</xs:annotation>
 				</xs:element>
 				<xs:element ref="volume"/>
+				<xs:element ref="object-id" minOccurs="0"/>
 				<xs:element ref="volume-id">
 					<xs:annotation>
 						<xs:documentation>This element will be ignored</xs:documentation>
@@ -3418,6 +3419,7 @@
 				</xs:choice>
 				<xs:element ref="access-date" minOccurs="0"/>
 				<xs:element ref="volume" minOccurs="0"/>
+				<xs:element ref="object-id" minOccurs="0"/>
 				<xs:element ref="edition" minOccurs="0"/>
 				<xs:element ref="conf-name" minOccurs="0"/>
 				<xs:element ref="conf-date" minOccurs="0"/>

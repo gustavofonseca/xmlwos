@@ -1,4 +1,6 @@
 import urllib2
+from datetime import datetime
+
 from pymongo import Connection
 from porteira.porteira import Schema
 
@@ -32,7 +34,14 @@ def validate_xml(article_id, api_host='localhost', api_port='7000'):
     if result:
         return result
     else:
-        return sch.get_validation_errors(xml)
+        now = datetime.now().isoformat()[0:10]
+        error_report = open("reports/{0}-errors.txt".format(now), "a")
+        error_msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
+        error_report.write(error_msg)
+        error_report.close()
+        print error_msg
+
+    return None
 
 
 def find(fltr, collection, skip, limit):
