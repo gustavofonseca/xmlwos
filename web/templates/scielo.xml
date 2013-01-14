@@ -45,7 +45,8 @@
                             {% end %}
                         </subj-group>
                     </article-categories>
-                 {% end %}
+                {% end %}
+                {% if 'group-title' in article %}
                 <title-group>
                     {% for lang, title in article['group-title']['article-title'].items() %}
                         <article-title lang_id="{{ lang }}">{{ title }}</article-title>
@@ -56,6 +57,7 @@
                         </trans-title-group>
                     {% end %}
                 </title-group>
+                {% end %}
                 {% if 'contrib-group' in article %}
                 <contrib-group>
                     {% for author in article['contrib-group'] %}

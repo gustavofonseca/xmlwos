@@ -85,11 +85,10 @@ class ShineData(object):
                 article['lpage'] = self.data['article']['v14'][0]['l']
 
         # Article titles
-        article['group-title'] = {}
-        article['group-title']['article-title'] = {}
-        article['group-title']['trans-title'] = {}
-
         if 'v12' in self.data['article']:
+            article['group-title'] = {}
+            article['group-title']['article-title'] = {}
+            article['group-title']['trans-title'] = {}
             for title in self.data['article']['v12']:
                 if title['l'] == article['original_language']:
                     article['group-title']['article-title'].setdefault(title['l'],
