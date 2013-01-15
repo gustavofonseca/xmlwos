@@ -27,7 +27,7 @@ def validate_xml(article_id, api_host='localhost', api_port='7000'):
 
     xml_url = 'http://{0}:{1}/api/v1/article?code={2}&format=xml'.format(api_host, api_port, article_id)
 
-    xml = urllib2.urlopen(xml_url, timeout=3).read()
+    xml = urllib2.urlopen(xml_url, timeout=30).read()
 
     result = sch.validate(xml)
 
@@ -39,7 +39,6 @@ def validate_xml(article_id, api_host='localhost', api_port='7000'):
         error_msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
         error_report.write(error_msg)
         error_report.close()
-        print error_msg
 
     return None
 
