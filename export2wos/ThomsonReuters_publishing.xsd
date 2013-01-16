@@ -486,7 +486,7 @@
 	<xs:element name="year">
 		<xs:simpleType>
 			<xs:restriction base="xs:gYear">
-				<xs:minInclusive value="1000"/>
+				<xs:minInclusive value="1700"/>
 				<xs:maxInclusive value="2030"/>
 			</xs:restriction>
 		</xs:simpleType>

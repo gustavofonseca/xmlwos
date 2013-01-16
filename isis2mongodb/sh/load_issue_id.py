@@ -6,7 +6,7 @@ coll = db['articles']
 coll.ensure_index('code_issue')
 coll.ensure_index('code')
 
-pids = coll.find({}, {'code': 1, 'title': 1})
+pids = coll.find({}, {'code': 1, 'title.v935': 1, 'title.v400': 1, 'article.v65': 1})
 
 done = 0
 i = 0
@@ -14,13 +14,17 @@ for pid in pids:
     issns = []
     v935 = ''
     v400 = ''
+    publication_year = ''
     i = i + 1
-    print i
+    print "{0}: {1}".format(pid, i)
     if 'v935' in pid['title']:
         v935 = pid['title']['v935'][0]['_']
 
     if 'v400' in pid['title']:
         v400 = pid['title']['v400'][0]['_']
+
+    if 'v65' in pid['article']:
+        publication_year = pid['article']['v65'][0]['_'][0:4]
 
     issns.append(v935)
     if v400 != v935:
@@ -30,6 +34,7 @@ for pid in pids:
                                                  'validated_scielo': 'False',
                                                  'validated_wos': 'False',
                                                  'sent_wos': 'False',
-                                                 'journal': issns
+                                                 'journal': issns,
+                                                 'publication_year': publication_year
                                                  }
                                 }, True)
