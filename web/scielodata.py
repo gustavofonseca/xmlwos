@@ -192,6 +192,7 @@ class ArticleHandler(tornado.web.RequestHandler):
         return self._db
 
     def post(self):
+        self._method = 'post'
         code = self.get_argument('code')
 
         article_filename = '../output/isos/{0}/{0}_artigo.json'.format(code)
@@ -235,6 +236,7 @@ class ArticleHandler(tornado.web.RequestHandler):
     @tornado.gen.engine
     def get(self):
         self._is_xml = False
+        self._method = 'get'
 
         def _on_response(response, error):
             if error:
@@ -269,14 +271,16 @@ class ArticleHandler(tornado.web.RequestHandler):
         self.db.articles.find({"code": code}, {"_id": 0}, limit=1, callback=_on_response)
 
     def finish(self, chunk=None):
-        if self._is_xml == True:
-            try:
-                p = etree.XMLParser(remove_blank_text=True)
-                chunk = etree.tostring(etree.XML(chunk, parser=p))
-            except:
-                pass
-        tornado.web.RequestHandler.finish(self, chunk)
-
+        if self._method = 'get':
+            if self._is_xml == True:
+                try:
+                    p = etree.XMLParser(remove_blank_text=True)
+                    chunk = etree.tostring(etree.XML(chunk, parser=p))
+                except:
+                    pass
+            tornado.web.RequestHandler.finish(self, chunk)
+        else:
+            pass
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
