@@ -201,9 +201,28 @@ class ArticleHandler(tornado.web.RequestHandler):
         title = json.loads(open(title_filename).read())
         bib4cit = json.loads(open(bib4cit_filename).read())
 
+        issns = []
+        if 'v935' in title['docs'][0]:
+            v935 = title['docs'][0]['v935'][0]['_']
+
+        if 'v400' in title['docs'][0]:
+            v400 = title['docs'][0]['v400'][0]['_']
+
+        if 'v65' in article['docs'][0]:
+            publication_year = article['docs'][0]['v65'][0]['_'][0:4]
+
+        issns.append(v935)
+        if v400 != v935:
+            issns.append(v400)
+
         dict_data = {'article': article['docs'][0],
                      'title': title['docs'][0],
-                     'citations': bib4cit['docs']
+                     'citations': bib4cit['docs'],
+                     'code_issue': code[0:18],
+                     'validated_scielo': 'False',
+                     'validated_wos': 'False',
+                     'sent_wos': 'False',
+                     'publication_year': publication_year,
                     }
         self.db.articles.update(
             {'code': code},

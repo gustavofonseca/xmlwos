@@ -54,9 +54,9 @@ do
     loaded=`curl -s -X GET "http://"$scielo_data_url"/api/v1/is_loaded?code="$pid`
     if [[ $loaded == "False" ]]; then
         mkdir -p ../output/isos/$pid
-        $cisis_dir/mx ../databases/isis/artigo  btell="0" pid=$pid   iso=../output/isos/$pid/$pid"_artigo.iso" -all now
-        $cisis_dir/mx ../databases/isis/title   btell="0" ${pid:1:9} iso=../output/isos/$pid/$pid"_title.iso" -all now
-        $cisis_dir/mx ../databases/isis/bib4cit btell="0" $pid"$"    iso=../output/isos/$pid/$pid"_bib4cit.iso" -all now
+        $cisis_dir/mx ../../databases/isis/artigo  btell="0" pid=$pid   iso=../output/isos/$pid/$pid"_artigo.iso" -all now
+        $cisis_dir/mx ../../databases/isis/title   btell="0" ${pid:1:9} iso=../output/isos/$pid/$pid"_title.iso" -all now
+        $cisis_dir/mx ../../databases/isis/bib4cit btell="0" $pid"$"    iso=../output/isos/$pid/$pid"_bib4cit.iso" -all now
 
         python isis2json.py ../output/isos/$pid/$pid"_artigo.iso" -c -p v -t 3 > ../output/isos/$pid/$pid"_artigo.json"
         python isis2json.py ../output/isos/$pid/$pid"_title.iso" -c -p v -t 3 > ../output/isos/$pid/$pid"_title.json"

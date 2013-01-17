@@ -26,15 +26,15 @@ for issn in issns:
                                                         '%04d' % index_issn)
 
     xml_file = open(xml_file_name, 'a')
-    xml_file.write('<articles xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dtd-version="1.05"')
+    xml_file.write('<articles xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dtd-version="1.06">')
 
     index_document = 0
     for document in documents:
         index_document = index_document + 1
-        xml = tools.validate_xml(coll, document)
+        xml = tools.validate_xml(coll, document, issn)
         if xml:
             root = etree.fromstring(xml)
             xml = etree.tostring(root.getchildren()[0])
-    xml_file.write(xml)
+            xml_file.write(xml)
     xml_file.write("<'/articles'>")
     xml_file.close()

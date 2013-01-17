@@ -75,7 +75,7 @@ def get_collection(mongodb_host='localhost',
     return coll
 
 
-def validate_xml(coll, article_id, api_host='localhost', api_port='7000'):
+def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='7000'):
     """
     Validate article agains WOS Schema. Flaging his attribute validated_scielo to True if
     the document is valid.
@@ -94,7 +94,7 @@ def validate_xml(coll, article_id, api_host='localhost', api_port='7000'):
         return xml
     else:
         now = datetime.now().isoformat()[0:10]
-        error_report = open("reports/{0}-errors.txt".format(now), "a")
+        error_report = open("reports/{0}-{1}-errors.txt".format(issue_id, now), "a")
         error_msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
         error_report.write(error_msg)
         error_report.close()
