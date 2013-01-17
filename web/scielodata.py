@@ -195,9 +195,9 @@ class ArticleHandler(tornado.web.RequestHandler):
         self._method = 'post'
         code = self.get_argument('code')
 
-        article_filename = '../output/isos/{0}/{0}_artigo.json'.format(code)
-        title_filename = '../output/isos/{0}/{0}_title.json'.format(code)
-        bib4cit_filename = '../output/isos/{0}/{0}_bib4cit.json'.format(code)
+        article_filename = '../isis2mongodb/output/isos/{0}/{0}_artigo.json'.format(code)
+        title_filename = '../isis2mongodb/output/isos/{0}/{0}_title.json'.format(code)
+        bib4cit_filename = '../isis2mongodb/output/isos/{0}/{0}_bib4cit.json'.format(code)
         article = json.loads(open(article_filename).read())
         title = json.loads(open(title_filename).read())
         bib4cit = json.loads(open(bib4cit_filename).read())
