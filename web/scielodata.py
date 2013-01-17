@@ -270,18 +270,6 @@ class ArticleHandler(tornado.web.RequestHandler):
         format = self.get_argument('format')
         self.db.articles.find({"code": code}, {"_id": 0}, limit=1, callback=_on_response)
 
-    def finish(self, chunk=None):
-        if self._method == 'get':
-            if self._is_xml == True:
-                try:
-                    p = etree.XMLParser(remove_blank_text=True)
-                    chunk = etree.tostring(etree.XML(chunk, parser=p))
-                except:
-                    pass
-            tornado.web.RequestHandler.finish(self, chunk)
-        else:
-            pass
-
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
