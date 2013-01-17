@@ -271,7 +271,7 @@ class ArticleHandler(tornado.web.RequestHandler):
         self.db.articles.find({"code": code}, {"_id": 0}, limit=1, callback=_on_response)
 
     def finish(self, chunk=None):
-        if self._method = 'get':
+        if self._method == 'get':
             if self._is_xml == True:
                 try:
                     p = etree.XMLParser(remove_blank_text=True)
