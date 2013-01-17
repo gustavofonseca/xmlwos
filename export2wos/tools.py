@@ -5,6 +5,7 @@ from datetime import datetime
 import pymongo
 from pymongo import Connection
 from porteira.porteira import Schema
+from lxml import etree
 
 
 class Package(object):

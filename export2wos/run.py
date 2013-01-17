@@ -10,6 +10,7 @@ coll = tools.get_collection('192.168.1.76')
 issns = tools.load_journals_list()
 
 index_issn = 0
+
 for issn in issns:
     index_issn = index_issn + 1
     print "validating xml's for {0}".format(issn)
@@ -21,6 +22,7 @@ for issn in issns:
         os.makedirs('tmp/{0}'.format(issn))
 
     now = datetime.now().isoformat()[0:10]
+
     xml_file_name = "tmp/{0}/SciELO_{1}_{2}.xml".format(issn,
                                                         now,
                                                         '%04d' % index_issn)
@@ -33,8 +35,10 @@ for issn in issns:
         index_document = index_document + 1
         xml = tools.validate_xml(coll, document, issn)
         if xml:
-            root = etree.fromstring(xml)
+            parser = etree.XMLParser(remove_blank_text=True)
+            root = etree.fromstring(xml, parser)
             xml = etree.tostring(root.getchildren()[0])
             xml_file.write(xml)
+
     xml_file.write("<'/articles'>")
     xml_file.close()

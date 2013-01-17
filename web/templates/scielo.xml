@@ -1,6 +1,6 @@
 <articles xmlns:xlink="http://www.w3.org/1999/xlink" 
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          dtd-version="1.05">
+          dtd-version="1.06">
 {% for doc in docs %}
     {% set article = doc.article %}
     {% set citations = doc.citations %}
