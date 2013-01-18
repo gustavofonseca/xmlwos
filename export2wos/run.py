@@ -17,7 +17,7 @@ for issn in issns:
     index_issn = index_issn + 1
     print "validating xml's for {0}".format(issn)
 
-    documents = tools.not_validated(coll, issn)
+    documents = tools.not_validated(coll, issn, publication_year=2002)
     print "Loading documents to be validated"
 
     if not os.path.exists('tmp/{0}'.format(issn)):

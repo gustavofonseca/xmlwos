@@ -121,7 +121,7 @@ def not_validated(collection,
 
     fltr = {'sent_wos': 'False',
             'validated_scielo': 'False',
-            'publication_year': {'$gt': str(publication_year)}}
+            'publication_year': {'$gte': str(publication_year)}}
 
     if journal_issn:
         fltr.update({'journal': journal_issn})
@@ -142,7 +142,7 @@ def validated(collection,
 
     fltr = {'sent_wos': 'True',
             'validated_scielo': 'False',
-            'publication_year': {'$gt': str(publication_year)}}
+            'publication_year': {'$gte': str(publication_year)}}
 
     if journal_issn:
         fltr.update({'journal': journal_issn})
@@ -161,7 +161,7 @@ def sent_to_wos(collection,
     """
 
     fltr = {'sent_wos': 'True',
-            'publication_year': {'$gt': str(publication_year)}}
+            'publication_year': {'$gte': str(publication_year)}}
 
     if journal_issn:
         fltr.update({'journal': journal_issn})
