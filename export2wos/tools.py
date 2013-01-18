@@ -99,7 +99,7 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
     try:
         result = sch.validate(xml)
     except etree.XMLSyntaxError as e:
-        msg = "{0}: Problems reading de XML, {1}, {2}".format(article_id, e.errno, e.strerror)
+        msg = "{0}: Problems reading de XML, {1}".format(article_id, e.text)
         write_log(article_id,
                   issue_id,
                   sch,
