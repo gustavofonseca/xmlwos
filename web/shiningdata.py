@@ -90,14 +90,15 @@ class ShineData(object):
             article['group-title']['article-title'] = {}
             article['group-title']['trans-title'] = {}
             for title in self.data['article']['v12']:
-                if title['l'] == article['original_language']:
-                    article['group-title']['article-title'].setdefault(title['l'],
-                        title['_']
-                        )
-                else:
-                    article['group-title']['trans-title'].setdefault(title['l'],
-                        title['_']
-                        )
+                if 'l' in title:
+                    if title['l'] == article['original_language']:
+                        article['group-title']['article-title'].setdefault(title['l'],
+                            title['_']
+                            )
+                    else:
+                        article['group-title']['trans-title'].setdefault(title['l'],
+                            title['_']
+                            )
 
         # Authors
         if 'v10' in self.data['article']:
