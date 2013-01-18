@@ -29,18 +29,23 @@ for issn in issns:
                                                         now,
                                                         '%04d' % index_issn)
 
-    xml_file = open(xml_file_name, 'a')
-    xml_file.write('<articles xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" dtd-version="1.06">')
+    if not os.path.exists(xml_file_name):
+        xml_file = open(xml_file_name, 'a')
+        xml_file.write('<articles xmlns:xlink="http://www.w3.org/1999/xlink" '\
+                    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '\
+                    'dtd-version="1.06">')
 
-    index_document = 0
-    for document in documents:
-        index_document = index_document + 1
-        xml = tools.validate_xml(coll, document, issn)
-        if xml:
-            parser = etree.XMLParser(remove_blank_text=True)
-            root = etree.fromstring(xml, parser)
-            xml = etree.tostring(root.getchildren()[0])
-            xml_file.write(xml)
+        index_document = 0
+        for document in documents:
+            index_document = index_document + 1
+            xml = tools.validate_xml(coll, document, issn)
+            if xml:
+                parser = etree.XMLParser(remove_blank_text=True)
+                root = etree.fromstring(xml, parser)
+                xml = etree.tostring(root.getchildren()[0])
+                xml_file.write(xml)
 
-    xml_file.write("<'/articles'>")
-    xml_file.close()
+        xml_file.write("</articles>")
+        xml_file.close()
+    else:
+        print "File {0} already exists".format(xml_file_name)

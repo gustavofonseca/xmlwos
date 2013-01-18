@@ -1,6 +1,5 @@
 from pymongo import Connection
 
-
 jareas = {}
 with open('_journal_subjects.txt') as f:
     for line in f:
@@ -23,7 +22,13 @@ total = pids.count()
 done = 0
 
 for pid in pids:
-    issn = pid['code'][1:10]
+    try:
+        issn = pid['code'][1:10]
+    except:
+        print '{0} Code not found in api document. Probably a ghost document'.format(pid)
+        coll.remove({'_id': pid['_id']})
+        continue
+
     done = done + 1
     if not 'v854' in pid['title']:
         print "({0},{1}) Loading WOS area for {2}".format(total, done, pid['code'])

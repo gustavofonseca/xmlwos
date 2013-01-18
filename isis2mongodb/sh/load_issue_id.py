@@ -17,9 +17,12 @@ for pid in pids:
     publication_year = ''
     i = i + 1
     print "{0}: {1}".format(pid, i)
+
+    v935 = ""
     if 'v935' in pid['title']:
         v935 = pid['title']['v935'][0]['_']
 
+    v400 = ""
     if 'v400' in pid['title']:
         v400 = pid['title']['v400'][0]['_']
 
