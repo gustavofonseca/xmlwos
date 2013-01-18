@@ -76,6 +76,14 @@ def get_collection(mongodb_host='localhost',
     return coll
 
 
+def write_log(article_id, issue_id, schema, xml, msg):
+    now = datetime.now().isoformat()[0:10]
+    error_report = open("reports/{0}-{1}-errors.txt".format(issue_id, now), "a")
+    error_msg = "{0}: {1}\r\n".format(article_id, str(schema.get_validation_errors(xml)))
+    error_report.write(error_msg)
+    error_report.close()
+
+
 def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='7000'):
     """
     Validate article agains WOS Schema. Flaging his attribute validated_scielo to True if
@@ -88,17 +96,28 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
 
     xml = urllib2.urlopen(xml_url, timeout=30).read()
 
-    result = sch.validate(xml)
+    try:
+        result = sch.validate(xml)
+    except etree.XMLSyntaxError as e:
+        msg = "{0}: Problems reading de XML, {1}, {2}".format(article_id, e.errno, e.strerror)
+        write_log(article_id,
+                  issue_id,
+                  sch,
+                  xml,
+                  msg)
+
+        return None
 
     if result:
         coll.update({'code': article_id}, {'$set': {'validated_scielo': 'True'}}, True)
         return xml
     else:
-        now = datetime.now().isoformat()[0:10]
-        error_report = open("reports/{0}-{1}-errors.txt".format(issue_id, now), "a")
-        error_msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
-        error_report.write(error_msg)
-        error_report.close()
+        msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
+        write_log(article_id,
+                  issue_id,
+                  sch,
+                  xml,
+                  msg)
 
     return None
 
