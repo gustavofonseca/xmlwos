@@ -91,7 +91,7 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
     result = sch.validate(xml)
 
     if result:
-        coll.update({'code': article_id}, {'validated_scielo': 'True'}, True)
+        coll.update({'code': article_id}, {'$set': {'validated_scielo': 'True'}}, True)
         return xml
     else:
         now = datetime.now().isoformat()[0:10]

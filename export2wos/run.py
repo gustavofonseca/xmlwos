@@ -11,6 +11,8 @@ issns = tools.load_journals_list()
 
 index_issn = 0
 
+
+# Loading XML files
 for issn in issns:
     index_issn = index_issn + 1
     print "validating xml's for {0}".format(issn)

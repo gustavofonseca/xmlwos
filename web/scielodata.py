@@ -203,9 +203,12 @@ class ArticleHandler(tornado.web.RequestHandler):
         bib4cit = json.loads(open(bib4cit_filename).read())
 
         issns = []
+
+        v935 = ""
         if 'v935' in title['docs'][0]:
             v935 = title['docs'][0]['v935'][0]['_']
 
+        v400 = ""
         if 'v400' in title['docs'][0]:
             v400 = title['docs'][0]['v400'][0]['_']
 
