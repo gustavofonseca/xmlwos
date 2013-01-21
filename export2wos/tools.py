@@ -1,11 +1,90 @@
 import urllib2
 import re
 from datetime import datetime
+import os
+import tarfile
+import zipfile
+import StringIO
+import tempfile
 
 import pymongo
 from pymongo import Connection
 from porteira.porteira import Schema
 from lxml import etree
+
+
+class Bundle(object):
+    def __init__(self, *args, **kwargs):
+        """
+        Accepts an arbitrary number of logical name - data pairs::
+
+        b = Bundle(('arq1', 'arq1 content as str'))
+        """
+        self._data = dict(args)
+
+    def _tar(self):
+        """
+        Generate a tarball containing the data passed at init time.
+
+        Returns a file handler.
+        """
+        tmp = tempfile.NamedTemporaryFile(delete=True)
+        out = tarfile.open(tmp.name, 'w')
+
+        try:
+            for name, data in self._data.items():
+                info = tarfile.TarInfo(name)
+                info.size = len(data)
+                out.addfile(info, StringIO.StringIO(data.encode('cp1252', 'replace')))
+        finally:
+            out.close()
+
+        tmp.seek(0)
+        return tmp
+
+    def _zip(self):
+        tmp = tempfile.NamedTemporaryFile(delete=True)
+        out = zipfile.ZipFile(tmp.name, mode='w')
+
+        try:
+            for name, data in self._data.items():
+                info = zipfile.ZipInfo(name)
+                info.file_size = len(data)
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.create_system = 0  # 0 = windows, 3 = unix
+                out.writestr(info, data.encode('cp1252', 'replace'))
+        finally:
+            out.close()
+
+        tmp.seek(0)
+        return tmp
+
+    def deploy(self, target):
+
+        if target.endswith('tar'):
+            data = self._tar()
+        else:
+            data = self._zip()
+
+        base_path = os.path.split(os.path.splitext(target)[-2])[0]
+        if not os.path.exists(base_path):
+            os.makedirs(base_path, 0755)
+
+        with open(target, 'w') as f:
+            f.write(data.read())
+
+        data.close()
+
+
+def generate_filename(prefix,
+                      filetype='tar',
+                      fmt='%Y%m%d-%H:%M:%S:%f'):
+        """
+        Generates a string to be used as the bundle filename.
+        Format: <prefix>-<data-fmt>.<filetype>>
+        """
+        now = datetime.strftime(datetime.now(), fmt)
+        return '{0}.{1}'.format('-'.join([prefix, now]), filetype)
 
 
 class Package(object):
@@ -78,7 +157,7 @@ def get_collection(mongodb_host='localhost',
 
 def write_log(article_id, issue_id, schema, xml, msg):
     now = datetime.now().isoformat()[0:10]
-    error_report = open("reports/{0}-{1}-errors.txt".format(issue_id, now), "a")
+    error_report = open("reports/{0}_{1}_errors.txt".format(issue_id, now), "a")
     error_msg = "{0}: {1}\r\n".format(article_id, str(schema.get_validation_errors(xml)))
     error_report.write(error_msg)
     error_report.close()
@@ -112,7 +191,11 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
         coll.update({'code': article_id}, {'$set': {'validated_scielo': 'True'}}, True)
         return xml
     else:
-        msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
+        msg = ""
+
+        for error in sch.get_validation_errors(xml):
+            msg += "{0}: {1}\r\n".format(article_id, error[2])
+
         write_log(article_id,
                   issue_id,
                   sch,
