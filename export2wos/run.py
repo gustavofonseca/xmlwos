@@ -46,3 +46,9 @@ for issn in issns:
         xml_file.close()
     else:
         print "File {0} already exists".format(xml_file_name)
+
+#zipping files
+files = os.listdir('tmp')
+tools.packing_zip(files)
+
+#sending to ftp.scielo.br
