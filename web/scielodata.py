@@ -205,10 +205,10 @@ class ArticleHandler(tornado.web.RequestHandler):
         issns = []
 
         applicable = 'True'
-        if 'v71' in article['docs']:
+        if 'v71' in article['docs'][0]:
             # Checking if the document type is valid to be sent to WoS.
             # Some document types doesn't have metadata enough to be sent to WoS.
-            if not self.data['article']['v71'][0]['_'] in choices.article_types:
+            if not article['docs'][0]['v71'][0]['_'] in choices.article_types:
                 applicable = 'False'
 
         v935 = ""
