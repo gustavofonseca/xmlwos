@@ -209,7 +209,7 @@ class ArticleHandler(tornado.web.RequestHandler):
             # Checking if the document type is valid to be sent to WoS.
             # Some document types doesn't have metadata enough to be sent to WoS.
             if self.data['article']['v71'][0]['_'] in choices.article_types:
-                not_apply = 'True'
+                applicable = 'True'
 
         v935 = ""
         if 'v935' in title['docs'][0]:
