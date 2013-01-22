@@ -9,6 +9,8 @@ coll = tools.get_collection('192.168.1.76')
 
 issns = tools.load_journals_list()
 
+now = datetime.now().isoformat()[0:10]
+
 index_issn = 0
 
 # Loading XML files
@@ -21,8 +23,6 @@ for issn in issns:
 
     if not os.path.exists('tmp/xml'):
         os.makedirs('tmp/xml')
-
-    now = datetime.now().isoformat()[0:10]
 
     xml_file_name = "tmp/xml/SciELO_{0}_{1}.xml".format(now, issn)
 
@@ -48,7 +48,8 @@ for issn in issns:
         print "File {0} already exists".format(xml_file_name)
 
 #zipping files
-files = os.listdir('tmp')
-tools.packing_zip(files)
+files = os.listdir('tmp/xml')
+zipped_file_name = tools.packing_zip(files)
 
 #sending to ftp.scielo.br
+tools.send_to_ftp(zipped_file_name)

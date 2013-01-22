@@ -3,11 +3,21 @@ import re
 from datetime import datetime
 import os
 import zipfile
+from ftplib import FTP
 
 import pymongo
 from pymongo import Connection
 from porteira.porteira import Schema
 from lxml import etree
+
+
+def send_to_ftp(file_name, user='anonymous', passwd='anonymous'):
+    ftp = FTP('ftp.scielo.br')
+    ftp.login(user=user, passwd=passwd)
+    f = open('tmp/{0}'.format(file_name), 'rd')
+    ftp.storbinary('STOR inbound/{0}'.format(file_name), f)
+    f.close()
+    ftp.quit()
 
 
 def packing_zip(files):
@@ -20,7 +30,9 @@ def packing_zip(files):
 
     with zipfile.ZipFile(target, 'w') as zipf:
         for xml_file in files:
-            zipf.write('tmp/{0}'.format(xml_file))
+            zipf.write('tmp/xml/{0}'.format(xml_file), arcname=xml_file)
+
+    return target
 
 
 def load_journals_list(journals_file='journals.txt'):
@@ -54,6 +66,11 @@ def get_collection(mongodb_host='localhost',
     conn = Connection(mongodb_host, mongodb_port)
     db = conn[mongodb_database]
     coll = db[mongodb_collection]
+    coll.ensure_index([('journal', pymongo.ASCENDING),
+                       ('validated_scielo', pymongo.ASCENDING),
+                       ('applicable', pymongo.ASCENDING),
+                       ('sent_wos', pymongo.ASCENDING),
+                       ('publication_year', pymongo.ASCENDING)])
     coll.ensure_index([('journal', pymongo.ASCENDING),
                        ('validated_scielo', pymongo.ASCENDING),
                        ('sent_wos', pymongo.ASCENDING),
@@ -138,6 +155,7 @@ def not_validated(collection,
 
     fltr = {'sent_wos': 'False',
             'validated_scielo': 'False',
+            'applicable': 'True',
             'publication_year': {'$gte': str(publication_year)}}
 
     if journal_issn:

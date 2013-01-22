@@ -204,6 +204,13 @@ class ArticleHandler(tornado.web.RequestHandler):
 
         issns = []
 
+        applicable = 'False'
+        if 'v71' in article['docs']:
+            # Checking if the document type is valid to be sent to WoS.
+            # Some document types doesn't have metadata enough to be sent to WoS.
+            if self.data['article']['v71'][0]['_'] in choices.article_types:
+                not_apply = 'True'
+
         v935 = ""
         if 'v935' in title['docs'][0]:
             v935 = title['docs'][0]['v935'][0]['_']
@@ -227,7 +234,9 @@ class ArticleHandler(tornado.web.RequestHandler):
                      'validated_wos': 'False',
                      'sent_wos': 'False',
                      'publication_year': publication_year,
+                     'applicable': applicable,
                     }
+
         self.db.articles.update(
             {'code': code},
             {'$set': dict_data},
