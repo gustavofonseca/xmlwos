@@ -1,6 +1,9 @@
 import urllib2
 import re
 from datetime import datetime
+import os
+import zipfile
+from ftplib import FTP
 
 import pymongo
 from pymongo import Connection
@@ -8,25 +11,55 @@ from porteira.porteira import Schema
 from lxml import etree
 
 
-class Package(object):
+def ftp_connect(user='anonymous', passwd='anonymous'):
+    ftp = FTP('ftp.scielo.br')
+    ftp.login(user=user, passwd=passwd)
 
-    def __init__(self, journal_issn):
-        self._doc_index = 0
-        self._journal_issn = journal_issn
+    return ftp
 
-    def set_xml(self, xml):
-        now = datetime.now().isoformat()[0:10]
-        file_name = "SciELO_{0}_{1}.xml".format(now, self._doc_index)
-        try:
-            xml_file = open('tmp/{0}/{1}'.format(self._journal_issn, file_name), 'w')
-            xml_file.write(xml)
-            return True
-        except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
-            return None
 
-    def zip(self):
-        pass
+def send_to_ftp(file_name, user='anonymous', passwd='anonymous'):
+    ftp = ftp_connect(user=user, passwd=passwd)
+    f = open('tmp/{0}'.format(file_name), 'rd')
+    ftp.storbinary('STOR inbound/{0}'.format(file_name), f)
+    f.close()
+    ftp.quit()
+
+
+def get_sync_file_from_ftp(user='anonymous', passwd='anonymous'):
+    ftp = ftp_connect(user=user, passwd=passwd)
+    with open('reports/validated_ids.txt', 'wb') as f:
+        def callback(data):
+            f.write(data)
+        ftp.retrbinary('RETR reports/validated_ids.txt', callback)
+    ftp.quit()
+
+
+def sync_validated_xml(coll):
+    with open('reports/validated_ids.txt', 'r') as f:
+        for pid in f:
+            coll.update({'code': pid}, {
+                '$set': {
+                    'validated_scielo': 'True',
+                    'validated_wos': 'True',
+                    'sent_wos': 'True',
+                    }
+                }, True)
+
+
+def packing_zip(files):
+    now = datetime.now().isoformat()[0:10]
+
+    if not os.path.exists('tmp/'):
+        os.makedirs('tmp/', 0755)
+
+    target = 'tmp/scielo_{0}.zip'.format(now)
+
+    with zipfile.ZipFile(target, 'w') as zipf:
+        for xml_file in files:
+            zipf.write('tmp/xml/{0}'.format(xml_file), arcname=xml_file)
+
+    return target
 
 
 def load_journals_list(journals_file='journals.txt'):
@@ -62,6 +95,11 @@ def get_collection(mongodb_host='localhost',
     coll = db[mongodb_collection]
     coll.ensure_index([('journal', pymongo.ASCENDING),
                        ('validated_scielo', pymongo.ASCENDING),
+                       ('applicable', pymongo.ASCENDING),
+                       ('sent_wos', pymongo.ASCENDING),
+                       ('publication_year', pymongo.ASCENDING)])
+    coll.ensure_index([('journal', pymongo.ASCENDING),
+                       ('validated_scielo', pymongo.ASCENDING),
                        ('sent_wos', pymongo.ASCENDING),
                        ('publication_year', pymongo.ASCENDING)])
     coll.ensure_index([('journal', pymongo.ASCENDING),
@@ -70,6 +108,9 @@ def get_collection(mongodb_host='localhost',
                        ('validated_scielo', pymongo.ASCENDING)])
     coll.ensure_index([('journal', pymongo.ASCENDING),
                        ('validated_wos', pymongo.ASCENDING)])
+    coll.ensure_index([('validated_wos', pymongo.ASCENDING)])
+    coll.ensure_index([('validated_scielo', pymongo.ASCENDING)])
+    coll.ensure_index([('sent_wos', pymongo.ASCENDING)])
     coll.ensure_index('code')
     coll.ensure_index('journal')
 
@@ -78,7 +119,7 @@ def get_collection(mongodb_host='localhost',
 
 def write_log(article_id, issue_id, schema, xml, msg):
     now = datetime.now().isoformat()[0:10]
-    error_report = open("reports/{0}-{1}-errors.txt".format(issue_id, now), "a")
+    error_report = open("reports/{0}_{1}_errors.txt".format(issue_id, now), "a")
     error_msg = "{0}: {1}\r\n".format(article_id, str(schema.get_validation_errors(xml)))
     error_report.write(error_msg)
     error_report.close()
@@ -112,7 +153,11 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
         coll.update({'code': article_id}, {'$set': {'validated_scielo': 'True'}}, True)
         return xml
     else:
-        msg = "{0}: {1}\r\n".format(article_id, str(sch.get_validation_errors(xml)))
+        msg = ""
+
+        for error in sch.get_validation_errors(xml):
+            msg += "{0}: {1}\r\n".format(article_id, error[2])
+
         write_log(article_id,
                   issue_id,
                   sch,
@@ -140,6 +185,7 @@ def not_validated(collection,
 
     fltr = {'sent_wos': 'False',
             'validated_scielo': 'False',
+            'applicable': 'True',
             'publication_year': {'$gte': str(publication_year)}}
 
     if journal_issn:

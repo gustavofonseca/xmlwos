@@ -9,7 +9,10 @@ coll = tools.get_collection('192.168.1.76')
 
 issns = tools.load_journals_list()
 
+now = datetime.now().isoformat()[0:10]
+
 index_issn = 0
+# Syncing XML status
 
 
 # Loading XML files
@@ -20,14 +23,10 @@ for issn in issns:
     documents = tools.not_validated(coll, issn, publication_year=2002)
     print "Loading documents to be validated"
 
-    if not os.path.exists('tmp/{0}'.format(issn)):
-        os.makedirs('tmp/{0}'.format(issn))
+    if not os.path.exists('tmp/xml'):
+        os.makedirs('tmp/xml')
 
-    now = datetime.now().isoformat()[0:10]
-
-    xml_file_name = "tmp/{0}/SciELO_{1}_{2}.xml".format(issn,
-                                                        now,
-                                                        '%04d' % index_issn)
+    xml_file_name = "tmp/xml/SciELO_{0}_{1}.xml".format(now, issn)
 
     if not os.path.exists(xml_file_name):
         xml_file = open(xml_file_name, 'a')
@@ -49,3 +48,10 @@ for issn in issns:
         xml_file.close()
     else:
         print "File {0} already exists".format(xml_file_name)
+
+#zipping files
+files = os.listdir('tmp/xml')
+zipped_file_name = tools.packing_zip(files)
+
+#sending to ftp.scielo.br
+tools.send_to_ftp(zipped_file_name)
