@@ -1,5 +1,6 @@
 <articles xmlns:xlink="http://www.w3.org/1999/xlink" 
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="ThomsonReuters_publishing_1.06.xsd"
           dtd-version="1.06">
 {% for doc in docs %}
     {% set article = doc.article %}
