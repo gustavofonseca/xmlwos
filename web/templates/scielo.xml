@@ -52,10 +52,12 @@
                     {% for lang, title in article['group-title']['article-title'].items() %}
                         <article-title lang_id="{{ lang }}">{{ title }}</article-title>
                     {% end %}
-                    {% for lang, title in  article['group-title']['trans-title'].items() %}
-                        <trans-title-group lang_id="{{ lang }}">
-                            <trans-title>{{ title }}</trans-title>
-                        </trans-title-group>
+                    {% if 'trans-title' in article['group-title'] %}
+                        {% for lang, title in  article['group-title']['trans-title'].items() %}
+                            <trans-title-group lang_id="{{ lang }}">
+                                <trans-title>{{ title }}</trans-title>
+                            </trans-title-group>
+                        {% end %}
                     {% end %}
                 </title-group>
                 {% end %}
