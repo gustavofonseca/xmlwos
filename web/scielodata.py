@@ -230,6 +230,7 @@ class ArticleHandler(tornado.web.RequestHandler):
                      'title': title['docs'][0],
                      'citations': bib4cit['docs'],
                      'code_issue': code[0:18],
+                     'code_title': code[1:10],
                      'validated_scielo': 'False',
                      'validated_wos': 'False',
                      'sent_wos': 'False',
