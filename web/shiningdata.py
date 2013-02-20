@@ -85,9 +85,9 @@ class ShineData(object):
                 article['lpage'] = self.data['article']['v14'][0]['l']
 
         # Article titles
+        article['group-title'] = {}
+        article['group-title']['article-title'] = {}
         if 'v12' in self.data['article']:
-            article['group-title'] = {}
-            article['group-title']['article-title'] = {}
             article['group-title']['trans-title'] = {}
             for title in self.data['article']['v12']:
                 if 'l' in title:
@@ -99,6 +99,8 @@ class ShineData(object):
                         article['group-title']['trans-title'].setdefault(title['l'],
                             title['_']
                             )
+        else:
+            article['group-title']['article-title'] = {'zz': 'Not Available'}
 
         # Authors
         if 'v10' in self.data['article']:
