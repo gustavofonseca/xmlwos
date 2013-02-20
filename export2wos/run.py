@@ -12,6 +12,8 @@ issns = tools.load_journals_list()
 now = datetime.now().isoformat()[0:10]
 
 index_issn = 0
+# Syncing XML status
+
 
 # Loading XML files
 for issn in issns:

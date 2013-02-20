@@ -11,13 +11,40 @@ from porteira.porteira import Schema
 from lxml import etree
 
 
-def send_to_ftp(file_name, user='anonymous', passwd='anonymous'):
+def ftp_connect(user='anonymous', passwd='anonymous'):
     ftp = FTP('ftp.scielo.br')
     ftp.login(user=user, passwd=passwd)
+
+    return ftp
+
+
+def send_to_ftp(file_name, user='anonymous', passwd='anonymous'):
+    ftp = ftp_connect(user=user, passwd=passwd)
     f = open('tmp/{0}'.format(file_name), 'rd')
     ftp.storbinary('STOR inbound/{0}'.format(file_name), f)
     f.close()
     ftp.quit()
+
+
+def get_sync_file_from_ftp(user='anonymous', passwd='anonymous'):
+    ftp = ftp_connect(user=user, passwd=passwd)
+    with open('reports/validated_ids.txt', 'wb') as f:
+        def callback(data):
+            f.write(data)
+        ftp.retrbinary('RETR reports/validated_ids.txt', callback)
+    ftp.quit()
+
+
+def sync_validated_xml(coll):
+    with open('reports/validated_ids.txt', 'r') as f:
+        for pid in f:
+            coll.update({'code': pid}, {
+                '$set': {
+                    'validated_scielo': 'True',
+                    'validated_wos': 'True',
+                    'sent_wos': 'True',
+                    }
+                }, True)
 
 
 def packing_zip(files):
@@ -81,6 +108,9 @@ def get_collection(mongodb_host='localhost',
                        ('validated_scielo', pymongo.ASCENDING)])
     coll.ensure_index([('journal', pymongo.ASCENDING),
                        ('validated_wos', pymongo.ASCENDING)])
+    coll.ensure_index([('validated_wos', pymongo.ASCENDING)])
+    coll.ensure_index([('validated_scielo', pymongo.ASCENDING)])
+    coll.ensure_index([('sent_wos', pymongo.ASCENDING)])
     coll.ensure_index('code')
     coll.ensure_index('journal')
 

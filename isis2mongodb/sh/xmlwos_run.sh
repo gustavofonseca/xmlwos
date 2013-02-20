@@ -3,28 +3,30 @@
 echo "Script running with CISIS version:"
 $cisis_dir/mx what
 
-colls=`ls -1 ../iso`
-rm -f ../../databases/isis/artigo.*
-rm -f ../../databases/isis/title.*
-rm -f ../../databases/isis/bib4cit.*
+if [[ $1 == 'regendata' ]]; then
+    colls=`ls -1 ../iso`
+    rm -f ../../databases/isis/artigo.*
+    rm -f ../../databases/isis/title.*
+    rm -f ../../databases/isis/bib4cit.*
 
-for coll in $colls;
-do
-    echo "Creating now "$coll" master files"
-    isos=`ls -1 ../iso/$coll/`
-    for iso in $isos;
+    for coll in $colls;
     do
-        echo "Creating master files for "$iso
-        dot_iso=`expr index "$iso" 1.`-1
-        database_name=${iso:0:$dot_iso}
-        $cisis_dir/mx iso=../iso/$coll/$iso append=../../databases/isis/$database_name -all now
+        echo "Creating now "$coll" master files"
+        isos=`ls -1 ../iso/$coll/`
+        for iso in $isos;
+        do
+            echo "Creating master files for "$iso
+            dot_iso=`expr index "$iso" 1.`-1
+            database_name=${iso:0:$dot_iso}
+            $cisis_dir/mx iso=../iso/$coll/$iso append=../../databases/isis/$database_name -all now
+        done
     done
-done
 
-echo "Indexing databases according to FSTs"
-$cisis_dir/mx ../../databases/isis/artigo  fst="@../fst/artigo.fst"  fullinv/ansi=../../databases/isis/artigo  tell=1000  -all now
-$cisis_dir/mx ../../databases/isis/title   fst="@../fst/title.fst"   fullinv/ansi=../../databases/isis/title   tell=10    -all now
-$cisis_dir/mx ../../databases/isis/bib4cit fst="@../fst/bib4cit.fst" fullinv/ansi=../../databases/isis/bib4cit tell=10000 -all now
+    echo "Indexing databases according to FSTs"
+    $cisis_dir/mx ../../databases/isis/artigo  fst="@../fst/artigo.fst"  fullinv/ansi=../../databases/isis/artigo  tell=1000  -all now
+    $cisis_dir/mx ../../databases/isis/title   fst="@../fst/title.fst"   fullinv/ansi=../../databases/isis/title   tell=10    -all now
+    $cisis_dir/mx ../../databases/isis/bib4cit fst="@../fst/bib4cit.fst" fullinv/ansi=../../databases/isis/bib4cit tell=10000 -all now
+fi
 
 echo "Creating articles processing list"
 from=$1
