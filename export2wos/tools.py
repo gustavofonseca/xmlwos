@@ -94,26 +94,27 @@ def get_collection(mongodb_host='localhost',
     conn = Connection(mongodb_host, mongodb_port)
     db = conn[mongodb_database]
     coll = db[mongodb_collection]
-    coll.ensure_index([('journal', pymongo.ASCENDING),
+    coll.ensure_index([('code_title', pymongo.ASCENDING),
                        ('validated_scielo', pymongo.ASCENDING),
                        ('applicable', pymongo.ASCENDING),
                        ('sent_wos', pymongo.ASCENDING),
                        ('publication_year', pymongo.ASCENDING)])
-    coll.ensure_index([('journal', pymongo.ASCENDING),
+    coll.ensure_index([('code_title', pymongo.ASCENDING),
                        ('validated_scielo', pymongo.ASCENDING),
                        ('sent_wos', pymongo.ASCENDING),
                        ('publication_year', pymongo.ASCENDING)])
-    coll.ensure_index([('journal', pymongo.ASCENDING),
+    coll.ensure_index([('code_title', pymongo.ASCENDING),
                        ('sent_wos', pymongo.ASCENDING)])
-    coll.ensure_index([('journal', pymongo.ASCENDING),
+    coll.ensure_index([('code_title', pymongo.ASCENDING),
                        ('validated_scielo', pymongo.ASCENDING)])
-    coll.ensure_index([('journal', pymongo.ASCENDING),
+    coll.ensure_index([('code_title', pymongo.ASCENDING),
                        ('validated_wos', pymongo.ASCENDING)])
     coll.ensure_index([('validated_wos', pymongo.ASCENDING)])
     coll.ensure_index([('validated_scielo', pymongo.ASCENDING)])
     coll.ensure_index([('sent_wos', pymongo.ASCENDING)])
     coll.ensure_index('code')
-    coll.ensure_index('journal')
+    coll.ensure_index('code_title')
+    coll.ensure_index('applicable')
 
     return coll
 
@@ -151,7 +152,7 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
         return None
 
     if result:
-        coll.update({'code': article_id}, {'$set': {'validated_scielo': 'True'}}, True)
+        coll.update({'code': article_id}, {'$set': {'validated_scielo': 'True'}})
         return xml
     else:
         msg = ""
@@ -169,12 +170,15 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
 
 
 def find(fltr, collection, skip, limit):
-    for article in collection.find(fltr, {'code': 1}).skip(skip).limit(limit):
-        yield article['code']
+
+    return collection.find(fltr, {'code': 1}).skip(skip).limit(limit)
+
+    #for article in collection.find(fltr, {'code': 1}).skip(skip).limit(limit):
+        #yield article['code']
 
 
 def not_validated(collection,
-                  journal_issn=None,
+                  code_title=None,
                   publication_year=1800,
                   skip=0,
                   limit=10000):
@@ -189,14 +193,14 @@ def not_validated(collection,
             'applicable': 'True',
             'publication_year': {'$gte': str(publication_year)}}
 
-    if journal_issn:
-        fltr.update({'journal': journal_issn})
+    if code_title:
+        fltr.update({'code_title': code_title})
 
     return find(fltr, collection, skip=skip, limit=limit)
 
 
 def validated(collection,
-              journal_issn=None,
+              code_title=None,
               publication_year=1800,
               skip=0,
               limit=10000):
@@ -210,14 +214,14 @@ def validated(collection,
             'validated_scielo': 'False',
             'publication_year': {'$gte': str(publication_year)}}
 
-    if journal_issn:
-        fltr.update({'journal': journal_issn})
+    if code_title:
+        fltr.update({'code_title': code_title})
 
     return find(fltr, collection, skip=skip, limit=limit)
 
 
 def sent_to_wos(collection,
-                journal_issn=None,
+                code_title=None,
                 publication_year=1800,
                 skip=0,
                 limit=10000):
@@ -229,7 +233,7 @@ def sent_to_wos(collection,
     fltr = {'sent_wos': 'True',
             'publication_year': {'$gte': str(publication_year)}}
 
-    if journal_issn:
-        fltr.update({'journal': journal_issn})
+    if code_title:
+        fltr.update({'code_title': code_title})
 
     return find(fltr, collection, skip=skip, limit=limit)
