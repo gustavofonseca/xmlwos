@@ -33,18 +33,19 @@ def get_sync_file_from_ftp(user='anonymous', passwd='anonymous'):
             f.write(data)
         ftp.retrbinary('RETR reports/validated_ids.txt', callback)
     ftp.quit()
+    f.close()
 
 
 def sync_validated_xml(coll):
     with open('reports/validated_ids.txt', 'r') as f:
         for pid in f:
-            coll.update({'code': pid}, {
+            coll.update({'code': pid.strip()}, {
                 '$set': {
                     'validated_scielo': 'True',
                     'validated_wos': 'True',
                     'sent_wos': 'True',
                     }
-                }, True)
+                })
 
 
 def packing_zip(files):
