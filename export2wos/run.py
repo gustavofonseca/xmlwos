@@ -2,10 +2,11 @@ from datetime import datetime
 import os
 
 import tools
+import config
 from lxml import etree
 
 # Setup a connection to SciELO Network Collection
-coll = tools.get_collection('192.168.1.76')
+coll = tools.get_collection(config.MONGODB_HOST)
 
 issns = tools.load_journals_list()
 
@@ -13,7 +14,11 @@ now = datetime.now().isoformat()[0:10]
 
 index_issn = 0
 # Syncing XML status
-
+print "Syncing XML's status according to WoS validated files"
+tools.get_sync_file_from_ftp(ftp_host=config.FTP_HOST,
+                                user=config.FTP_USER,
+                                passwd=config.FTP_PASSWD)
+tools.sync_validated_xml(coll)
 
 # Loading XML files
 for issn in issns:
@@ -38,7 +43,7 @@ for issn in issns:
         index_document = 0
         for document in documents:
             index_document = index_document + 1
-            xml = tools.validate_xml(coll, document['code'], issn, api_host='192.168.1.76')
+            xml = tools.validate_xml(coll, document['code'], issn, api_host=config.MONGODB_HOST)
             if xml:
                 parser = etree.XMLParser(remove_blank_text=True)
                 root = etree.fromstring(xml, parser)
@@ -61,4 +66,7 @@ files = os.listdir('tmp/xml')
 zipped_file_name = tools.packing_zip(files)
 
 #sending to ftp.scielo.br
-tools.send_to_ftp(zipped_file_name)
+tools.send_to_ftp(zipped_file_name,
+                        ftp_host=config.FTP_HOST,
+                        user=config.FTP_USER,
+                        passwd=config.FTP_PASSWD)
