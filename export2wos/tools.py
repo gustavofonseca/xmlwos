@@ -11,23 +11,33 @@ from porteira.porteira import Schema
 from lxml import etree
 
 
-def ftp_connect(user='anonymous', passwd='anonymous'):
-    ftp = FTP('ftp.scielo.br')
+def ftp_connect(ftp_host='localhost',
+                user='anonymous',
+                passwd='anonymous'):
+
+    ftp = FTP(ftp_host)
     ftp.login(user=user, passwd=passwd)
 
     return ftp
 
 
-def send_to_ftp(file_name, user='anonymous', passwd='anonymous'):
-    ftp = ftp_connect(user=user, passwd=passwd)
+def send_to_ftp(file_name,
+                    ftp_host='localhost',
+                    user='anonymous',
+                    passwd='anonymous'):
+
+    ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
     f = open('tmp/{0}'.format(file_name), 'rd')
     ftp.storbinary('STOR inbound/{0}'.format(file_name), f)
     f.close()
     ftp.quit()
 
 
-def get_sync_file_from_ftp(user='anonymous', passwd='anonymous'):
-    ftp = ftp_connect(user=user, passwd=passwd)
+def get_sync_file_from_ftp(ftp_host='localhost',
+                            user='anonymous',
+                            passwd='anonymous'):
+
+    ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
     with open('reports/validated_ids.txt', 'wb') as f:
         def callback(data):
             f.write(data)
