@@ -4778,6 +4778,7 @@
 			<xs:enumeration value="la"/>
 			<xs:enumeration value="pt"/>
 			<xs:enumeration value="po"/>
+			<xs:enumeration value="zz"/><!-- for not defined language -->
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:attribute name="lang_id" type="lang_id"/>
