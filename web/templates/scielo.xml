@@ -13,13 +13,13 @@
                 <journal-id journal-id-type="publisher">{{ article['journal-id'] }}</journal-id>
                 <journal-title-group>
                     {% if 'journal-title' in article %}
-                    <journal-title>{{ article['journal-title'] }}</journal-title>
+                    <journal-title>{{ unescape(article['journal-title']) }}</journal-title>
                     {% end %}
                     {% if 'journal-subtitle' in article %}
-                    <journal-subtitle>{{ article['journal-subtitle'] }}</journal-subtitle>
+                    <journal-subtitle>{{ unescape(article['journal-subtitle']) }}</journal-subtitle>
                     {% end %}
                     {% if 'abbrev-journal-title' in article %}
-                    <abbrev-journal-title>{{ article['abbrev-journal-title'] }}</abbrev-journal-title>
+                    <abbrev-journal-title>{{ unescape(article['abbrev-journal-title']) }}</abbrev-journal-title>
                     {% end %}
                 </journal-title-group>
                 <issn>{{ article['issn'] }}</issn>
@@ -50,12 +50,12 @@
                 {% if 'group-title' in article %}
                 <title-group>
                     {% for lang, title in article['group-title']['article-title'].items() %}
-                        <article-title lang_id="{{ lang }}">{{ title }}</article-title>
+                        <article-title lang_id="{{ lang }}">{{ unescape(title) }}</article-title>
                     {% end %}
                     {% if 'trans-title' in article['group-title'] %}
                         {% for lang, title in  article['group-title']['trans-title'].items() %}
                             <trans-title-group lang_id="{{ lang }}">
-                                <trans-title>{{ title }}</trans-title>
+                                <trans-title>{{ unescape(title) }}</trans-title>
                             </trans-title-group>
                         {% end %}
                     {% end %}
@@ -92,7 +92,7 @@
                                 <addr-line>{{ affiliation['addr-line'] }}</addr-line>
                             {% end %}
                             {% if 'institution' in affiliation %}
-                                <institution>{{ affiliation['institution'] }}</institution>
+                                <institution>{{ unescape(affiliation['institution']) }}</institution>
                             {% end %}
                             {% if 'country' in affiliation %}
                                 <country>{{ affiliation['country'] }}</country>
@@ -134,17 +134,17 @@
                 {% end %}
                 {% if 'group-abstract' in article %}
                     {% for lang, abstract in article['group-abstract']['abstract'].items() %}
-                        <abstract lang_id="{{ lang }}"><p>{{ abstract }}</p></abstract>
+                        <abstract lang_id="{{ lang }}"><p>{{ unescape(abstract) }}</p></abstract>
                     {% end %}
                     {% for lang, abstract in  article['group-abstract']['trans-abstract'].items() %}
-                        <trans-abstract lang_id="{{ lang }}"><p>{{ abstract }}</p></trans-abstract>
+                        <trans-abstract lang_id="{{ lang }}"><p>{{ unescape(abstract) }}</p></trans-abstract>
                     {% end %}
                 {% end %}
                 {% if 'kwd-group' in article %}
                     {% for group, keywords in article['kwd-group'].items() %}
                         <kwd-group lang_id="{{ group }}" kwd-group-type="author-generated">
                             {% for keyword in keywords %}
-                                <kwd>{{ keyword }}</kwd>
+                                <kwd>{{ unescape(keyword) }}</kwd>
                             {% end %}
                         </kwd-group>
                     {% end %}
@@ -158,13 +158,13 @@
                         <ref id="B{{ citation['order'] }}">
                             <element-citation publication-type="{{ citation['publication-type'] }}">
                                 {% if 'article-title' in citation %}
-                                    <article-title>{{ citation['article-title'] }}</article-title>
+                                    <article-title>{{ unescape(citation['article-title']) }}</article-title>
                                 {% end %}
                                 {% if 'source' in citation %}
-                                    <source>{{ citation['source'] }}</source>
+                                    <source>{{ unescape(citation['source']) }}</source>
                                 {% end %}
                                 {% if 'chapter-title' in citation %}
-                                    <chapter-title>{{ citation['chapter-title'] }}</chapter-title>
+                                    <chapter-title>{{ unescape(citation['chapter-title']) }}</chapter-title>
                                 {% end %}
                                 {% if 'conf-date' in citation %}
                                     <conf-date>{{ citation['conf-date'] }}</conf-date>
@@ -173,10 +173,10 @@
                                     <conf-loc>{{ citation['conf-loc'] }}</conf-loc>
                                 {% end %}
                                 {% if 'conf-name' in citation %}
-                                    <conf-name>{{ citation['conf-name'] }}</conf-name>
+                                    <conf-name>{{ unescape(citation['conf-name']) }}</conf-name>
                                 {% end %}
                                 {% if 'conf-sponsor' in citation %}
-                                    <conf-sponsor>{{ citation['conf-sponsor'] }}</conf-sponsor>
+                                    <conf-sponsor>{{ unescape(citation['conf-sponsor']) }}</conf-sponsor>
                                 {% end %}
                                 {% if 'date' in citation %}
                                     <date>
@@ -199,7 +199,7 @@
                                     <fpage>{{ citation['fpage'] }}</fpage>
                                 {% end %}
                                 {% for institution in citation['institutions'] %}
-                                    <institution>{{ institution }}</institution>
+                                    <institution>{{ unescape(institution) }}</institution>
                                 {% end %}
                                 {% if 'isbn' in citation %}
                                     <isbn>{{ citation['isbn'] }}</isbn>
@@ -220,7 +220,7 @@
                                     <issue-part>{{ citation['issue-part'] }}</issue-part>
                                 {% end %}
                                 {% if 'issue-title' in citation %}
-                                    <issue-title>{{ citation['issue-title'] }}</issue-title>
+                                    <issue-title>{{ unescape(citation['issue-title']) }}</issue-title>
                                 {% end %}
                                 {% if 'lpage' in citation %}
                                     <lpage>{{ citation['lpage'] }}</lpage>

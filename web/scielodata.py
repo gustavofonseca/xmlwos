@@ -270,7 +270,8 @@ class ArticleHandler(tornado.web.RequestHandler):
                     self.set_header('Content-Type', 'application/xml')
                     self.render('scielo.xml',
                         code=code,
-                        docs=shined_docs
+                        docs=shined_docs,
+                        nescape=tornado.escape.xhtml_unescape
                     )
                 else:
                     self.write(str(response[0]))
