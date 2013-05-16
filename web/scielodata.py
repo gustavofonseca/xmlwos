@@ -154,7 +154,7 @@ class IssueHandler(tornado.web.RequestHandler):
                         docs=shined_docs
                     )
                 else:
-                    self.write(str(response))
+                    self.write(json.dumps(response))
                     self.finish()
             else:
                 self.write('There is no data for this query!')
@@ -274,7 +274,7 @@ class ArticleHandler(tornado.web.RequestHandler):
                         nescape=tornado.escape.xhtml_unescape
                     )
                 else:
-                    self.write(str(response[0]))
+                    self.write(json.dumps(response[0]))
                     self.finish()
             else:
                 self.write('There is no data for this query!')
