@@ -67,10 +67,10 @@
                         <contrib contrib-type="author">
                             <name>
                                 {% if 'surname' in author %}
-                                    <surname>{{ author['surname'] }}</surname>
+                                    <surname>{{ unescape(author['surname']) }}</surname>
                                 {% end %}
                                 {% if 'given-names' in author %}
-                                    <given-names>{{ author['given-names'] }}</given-names>
+                                    <given-names>{{ unescape(author['given-names']) }}</given-names>
                                 {% end %}
                             </name>
                             {% if 'role' in author %}
@@ -230,10 +230,10 @@
                                         {% for author in citation['person-group'] %}
                                             <name>
                                                 {% if 'surname' in author %}
-                                                    <surname>{{ author['surname'] }}</surname>
+                                                    <surname>{{ unescape(author['surname']) }}</surname>
                                                 {% end %}
                                                 {% if 'given-names' in author %}
-                                                    <given-names>{{ author['given-names'] }}</given-names>
+                                                    <given-names>{{ unescape(author['given-names']) }}</given-names>
                                                 {% end %}
                                             </name>
                                         {% end %}
