@@ -27,6 +27,8 @@ class ShineData(object):
 
         if 'v690' in self.data['title']:
             article['scielo-url'] = self.data['title']['v690'][0]['_']
+        elif 'v69' in self.data['article']:
+            article['scielo-url'] = self.data['article']['v69'][0]['_']
 
         # Defining the DOI number
         if 'v237' in self.data['article']:
