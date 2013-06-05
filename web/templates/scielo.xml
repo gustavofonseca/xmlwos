@@ -243,7 +243,7 @@
                                     <series>{{ citation['series'] }}</series>
                                 {% end %}
                                 {% if 'publisher-loc' in citation %}
-                                    <publisher-loc>{{ citation['publisher-loc'] }}</publisher-loc>
+                                    <publisher-loc>{{ unescape(citation['publisher-loc']) }}</publisher-loc>
                                 {% end %}
                             </element-citation>
                         </ref>
