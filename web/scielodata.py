@@ -250,13 +250,12 @@ class ArticleHandler(tornado.web.RequestHandler):
     def get(self):
         self._is_xml = False
         self._method = 'get'
-        self._show_citation = self.get_argument('show_citation')
+        self._show_citation = self.get_argument('show_citation', default=False)
 
         def _on_response(response, error):
             if error:
                 raise tornado.web.HTTPError(500)
 
-            show_citation = False
             if self._show_citation is True:
                 show_citation = True
 
