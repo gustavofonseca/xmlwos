@@ -35,8 +35,8 @@
             <article-meta>
                 <unique-article-id pub-id-type="publisher-id">{{ article['article-id'] }}</unique-article-id>
                 <article-id pub-id-type="publisher-id">{{ article['article-id'] }}</article-id>
-                {% if 'doi' in article %}
-                    <article-id pub-id-type="doi">{{ article['doi'] }}</article-id>
+                {% if 'article-id-doi' in article %}
+                    <article-id pub-id-type="doi">{{ article['article-id-doi'] }}</article-id>
                 {% end %}
                 {% if 'journal-subjects' in article %}
                     <article-categories>
