@@ -257,7 +257,7 @@ class ArticleHandler(tornado.web.RequestHandler):
                 raise tornado.web.HTTPError(500)
 
             show_citation = False
-            if self._show_citation is True:
+            if self._show_citation == 'True':
                 show_citation = True
 
             if len(response) > 0:
