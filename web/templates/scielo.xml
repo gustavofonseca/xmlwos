@@ -151,7 +151,7 @@
                 {% end %}
             </article-meta>
        </front>
-       {% if citations and citation %}
+       {% if citations and show_citation %}
            <back>
                 <ref-list>
                     {% for citation in citations %}
