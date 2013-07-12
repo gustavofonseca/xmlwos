@@ -154,7 +154,7 @@ def validate_xml(coll, article_id, issue_id, api_host='localhost', api_port='700
     xsd = open('ThomsonReuters_publishing.xsd', 'r').read()
     sch = Schema(xsd)
 
-    xml_url = 'http://{0}:{1}/api/v1/article?code={2}&format=xml'.format(api_host, api_port, article_id)
+    xml_url = 'http://{0}:{1}/api/v1/article?code={2}&format=xml&show_citation=True'.format(api_host, api_port, article_id)
 
     xml = urllib2.urlopen(xml_url, timeout=30).read()
 
