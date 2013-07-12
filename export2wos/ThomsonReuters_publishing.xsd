@@ -4770,6 +4770,7 @@
 			<xs:documentation source="Internal annotation">Need to limit the variety of languages to only those that we fully support.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:language">
+			<xs:enumeration value="af"/>
 			<xs:enumeration value="de"/>
 			<xs:enumeration value="en"/>
 			<xs:enumeration value="es"/>
