@@ -250,11 +250,16 @@ class ArticleHandler(tornado.web.RequestHandler):
     def get(self):
         self._is_xml = False
         self._method = 'get'
+        self._show_citation = self.get_argument('show_citation', default=False)
 
         def _on_response(response, error):
             if error:
                 raise tornado.web.HTTPError(500)
-
+            
+            show_citation = False
+            if self._show_citation == 'True':
+                show_citation = True
+                
             if len(response) > 0:
                 if format == 'xml':
                     self._is_xml = True
@@ -271,6 +276,7 @@ class ArticleHandler(tornado.web.RequestHandler):
                     self.render('scielo.xml',
                         code=code,
                         docs=shined_docs,
+                        show_citation=show_citation,
                         unescape=tornado.escape.xhtml_unescape
                     )
                 else:
