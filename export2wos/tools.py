@@ -22,9 +22,9 @@ def ftp_connect(ftp_host='localhost',
 
 
 def send_to_ftp(file_name,
-                    ftp_host='localhost',
-                    user='anonymous',
-                    passwd='anonymous'):
+                ftp_host='localhost',
+                user='anonymous',
+                passwd='anonymous'):
 
     ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
     f = open('tmp/{0}'.format(file_name), 'rd')
@@ -34,27 +34,26 @@ def send_to_ftp(file_name,
 
 
 def get_sync_file_from_ftp(ftp_host='localhost',
-                            user='anonymous',
-                            passwd='anonymous'):
+                           user='anonymous',
+                           passwd='anonymous'):
 
     ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
+    ftp.cwd('reports')
+    report_files = ftp.nlst('SCIELO_ProcessedRecordIds*')
     with open('reports/validated_ids.txt', 'wb') as f:
         def callback(data):
             f.write(data)
-        ftp.retrbinary('RETR reports/validated_ids.txt', callback)
+        for report_file in report_files:
+            ftp.retrbinary('RETR %s' % report_file, callback)
+
+    for report_file in report_files:
+        ftp.delete('report_file')
+
     ftp.quit()
     f.close()
 
 
 def sync_validated_xml(coll):
-
-    coll.update({}, {
-                '$set': {
-                    'validated_scielo': 'False',
-                    'validated_wos': 'False',
-                    'sent_wos': 'False',
-                    }
-                }, multi=True)
 
     with open('reports/validated_ids.txt', 'r') as f:
         for pid in f:
