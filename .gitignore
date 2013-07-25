@@ -2,3 +2,6 @@
 databases
 reports
 xmlwos-env
+*.out
+config.py
+journals.txt
