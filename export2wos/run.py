@@ -24,7 +24,7 @@ tools.sync_validated_xml(coll)
 for issn in issns:
     index_issn = index_issn + 1
 
-    documents = tools.not_validated(coll, issn, publication_year=2002)
+    documents = tools.not_send(coll, issn, publication_year=2002)
 
     if documents.count() == 0:
         continue

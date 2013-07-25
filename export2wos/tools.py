@@ -195,7 +195,7 @@ def find(fltr, collection, skip, limit):
         #yield article['code']
 
 
-def not_validated(collection,
+def not_send(collection,
                   code_title=None,
                   publication_year=1800,
                   skip=0,
@@ -207,7 +207,6 @@ def not_validated(collection,
     """
 
     fltr = {'sent_wos': 'False',
-            'validated_scielo': 'False',
             'applicable': 'True',
             'publication_year': {'$gte': str(publication_year)}}
 
