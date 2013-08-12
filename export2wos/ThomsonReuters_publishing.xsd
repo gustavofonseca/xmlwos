@@ -4583,22 +4583,27 @@
 						<xs:enumeration value="dissertation"/>
 						<xs:enumeration value="editorial"/>
 						<xs:enumeration value="in-brief"/>
+						<xs:enumeration value="interview"/>
 						<xs:enumeration value="introduction"/>
 						<xs:enumeration value="letter"/>
 						<xs:enumeration value="meeting-report"/>
+						<xs:enumeration value="methodology"/>
 						<xs:enumeration value="news"/>
 						<xs:enumeration value="obituary"/>
 						<xs:enumeration value="oration"/>
 						<xs:enumeration value="partial-retraction"/>
+						<xs:enumeration value="point-of-view"/>
 						<xs:enumeration value="product-review"/>
 						<xs:enumeration value="rapid-communication"/>
 						<xs:enumeration value="reply"/>
 						<xs:enumeration value="reprint"/>
 						<xs:enumeration value="research-article"/>
+						<xs:enumeration value="research-note"/>
 						<xs:enumeration value="retraction"/>
 						<xs:enumeration value="review-article"/>
 						<xs:enumeration value="translation"/>
 						<xs:enumeration value="undefined"/>
+						<xs:enumeration value="update"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
