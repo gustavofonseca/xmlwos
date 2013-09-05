@@ -93,19 +93,18 @@ class ShineData(object):
         # Authors
         if 'v10' in self.data['article']:
             article['contrib-group'] = []
-            if 'v10' in self.data['article']:  # for author
-                for author in self.data['article']['v10']:
-                    authordict = {}
-                    if 's' in author:
-                        authordict['surname'] = author['s']
-                    if 'n' in author:
-                        authordict['given-names'] = author['n']
-                    if 'r' in author:
-                        authordict['role'] = author['r']
-                    if '1' in author:
-                        authordict['xref'] = author['1']
+            for author in self.data['article']['v10']:
+                authordict = {}
+                if 's' in author:
+                    authordict['surname'] = author['s']
+                if 'n' in author:
+                    authordict['given-names'] = author['n']
+                if 'r' in author:
+                    authordict['role'] = author['r']
+                if '1' in author:
+                    authordict['xref'] = author['1']
 
-                    article['contrib-group'].append(authordict)
+                article['contrib-group'].append(authordict)
 
         # Affiliations
         if 'v70' in self.data['article']:
