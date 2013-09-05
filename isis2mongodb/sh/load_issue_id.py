@@ -37,7 +37,7 @@ for pid in pids:
                                                  'validated_scielo': 'False',
                                                  'validated_wos': 'False',
                                                  'sent_wos': 'False',
-                                                 'journal': issns,
+                                                 'code_title': issns,
                                                  'publication_year': publication_year
                                                  }
                                 }, True)
