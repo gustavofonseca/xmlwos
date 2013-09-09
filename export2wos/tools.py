@@ -10,7 +10,6 @@ from pymongo import Connection
 from porteira.porteira import Schema
 from lxml import etree
 
-
 def ftp_connect(ftp_host='localhost',
                 user='anonymous',
                 passwd='anonymous'):
@@ -33,29 +32,107 @@ def send_to_ftp(file_name,
     ftp.quit()
 
 
+def send_take_off_files_to_ftp(ftp_host='localhost',
+                                user='anonymous',
+                                passwd='anonymous',
+                                remove_origin=False):
+
+    ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
+    
+    for fl in os.listdir('controller'):
+        if fl.split('.')[-1] == 'del':
+            f = open('controller/{0}'.format(fl), 'rd')
+            ftp.storbinary('STOR inbound/{0}'.format(fl), f)
+            f.close()
+        if remove_origin:
+            os.remove('controller/{0}'.format(fl))
+    
+    ftp.quit()
+
+
 def get_sync_file_from_ftp(ftp_host='localhost',
                            user='anonymous',
-                           passwd='anonymous'):
+                           passwd='anonymous',
+                           remove_origin=False):
 
     ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
     ftp.cwd('reports')
     report_files = ftp.nlst('SCIELO_ProcessedRecordIds*')
-    with open('reports/validated_ids.txt', 'wb') as f:
+    with open('controller/validated_ids.txt', 'wb') as f:
         def callback(data):
             f.write(data)
         for report_file in report_files:
             ftp.retrbinary('RETR %s' % report_file, callback)
 
-    for report_file in report_files:
-        ftp.delete('report_file')
+    ftp.quit()
+    f.close()
+
+    if remove_origin:
+        for report_file in report_files:
+            ftp.delete('report_file')
+
+
+def get_kee_into_file_from_ftp(ftp_host='localhost',
+                        user='anonymous',
+                        passwd='anonymous',
+                        remove_origin=False):
+
+    ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
+    ftp.cwd('controller')
+    with open('controller/keepinto.txt', 'wb') as f:
+        def callback(data):
+            f.write(data)
+        
+        ftp.retrbinary('RETR %s' % 'keepinto.txt', callback)
+
+    if remove_origin:
+        ftp.delete('keepinto.txt')
 
     ftp.quit()
     f.close()
 
 
-def sync_validated_xml(coll):
+def get_take_off_files_from_ftp(ftp_host='localhost',
+                        user='anonymous',
+                        passwd='anonymous',
+                        remove_origin=False):
 
-    with open('reports/validated_ids.txt', 'r') as f:
+    ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
+    ftp.cwd('controller')
+    report_files = ftp.nlst('takeoff_*.txt')
+    with open('controller/takeoff.txt', 'wb') as f:
+        def callback(data):
+            f.write(data)
+        for report_file in report_files:
+            ftp.retrbinary('RETR %s' % report_file, callback)
+
+    if remove_origin:
+        for report_file in report_files:
+            ftp.delete(report_file)
+
+    ftp.quit()
+    f.close()
+
+def load_pids_list_to_be_removed(coll):
+
+    now = datetime.now().isoformat()[0:10].replace('-','')
+
+    recorded_at = 'controller/SCIELO_{0}.del'.format(now)
+
+    with open(recorded_at, 'wb') as f:
+        for line in open('controller/takeoff.txt', 'r'):
+            sline = line.strip()
+            if len(sline) == 9:
+                for reg in coll.find({'code_title': sline}, {'code': 1}):
+                    f.write('SCIELO|{0}|Y\r\n'.format(reg['code']))
+            else:
+                f.write('SCIELO|{0}|Y\r\n'.format(sline))
+
+        f.close()
+
+def sync_validated_xml(coll, remove_origin=False):
+
+    with open('controller/validated_ids.txt', 'r') as f:
         for pid in f:
             coll.update({'code': pid.strip()}, {
                 '$set': {
@@ -65,6 +142,8 @@ def sync_validated_xml(coll):
                     }
                 })
 
+    if remove_origin:
+        os.remove('controller/validated_ids.txt')
 
 def packing_zip(files):
     now = datetime.now().isoformat()[0:10]
@@ -86,7 +165,7 @@ def load_journals_list(journals_file='journals.txt'):
     prog = re.compile('^[0-9]{4}-[0-9]{3}[0-9X]$')
 
     issns = []
-    with open('journals.txt', 'r') as f:
+    with open(journals_file, 'r') as f:
         index = 0
         for line in f:
             index = index + 1
