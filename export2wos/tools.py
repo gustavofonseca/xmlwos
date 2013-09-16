@@ -72,7 +72,7 @@ def get_sync_file_from_ftp(ftp_host='localhost',
             ftp.delete('report_file')
 
 
-def get_kee_into_file_from_ftp(ftp_host='localhost',
+def get_keep_into_file_from_ftp(ftp_host='localhost',
                         user='anonymous',
                         passwd='anonymous',
                         remove_origin=False):
@@ -117,11 +117,14 @@ def load_pids_list_to_be_removed(coll):
 
     now = datetime.now().isoformat()[0:10].replace('-','')
 
-    recorded_at = 'controller/SCIELO_{0}.del'.format(now)
+    recorded_at = 'controller/SCIELO_DEL_{0}.del'.format(now)
+
+    toremove = []
 
     with open(recorded_at, 'wb') as f:
         for line in open('controller/takeoff.txt', 'r'):
             sline = line.strip()
+            toremove.append(sline)
             if len(sline) == 9:
                 for reg in coll.find({'code_title': sline}, {'code': 1}):
                     f.write('SCIELO|{0}|Y\r\n'.format(reg['code']))
@@ -129,6 +132,8 @@ def load_pids_list_to_be_removed(coll):
                 f.write('SCIELO|{0}|Y\r\n'.format(sline))
 
         f.close()
+
+    return toremove
 
 def sync_validated_xml(coll, remove_origin=False):
 

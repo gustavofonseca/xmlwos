@@ -11,27 +11,24 @@ now = datetime.now().isoformat()[0:10]
 remove_origin = False
 index_issn = 0
 
-# Syncing XML status
 print "Loading keepinto.txt ISSN's file from FTP controller directory"
 tools.get_kee_into_file_from_ftp(ftp_host=config.FTP_HOST,
                                  user=config.FTP_USER,
                                  passwd=config.FTP_PASSWD)
 issns = tools.load_journals_list(journals_file='controller/keepinto.txt')
 
-# Syncing XML status
 print "Syncing XML's status according to WoS validated files"
 tools.get_sync_file_from_ftp(ftp_host=config.FTP_HOST,
                                 user=config.FTP_USER,
                                 passwd=config.FTP_PASSWD)
 tools.sync_validated_xml(coll)
 
-# Syncing XML status
 print "Creating file with a list of documents to be removed from WoS"
 tools.get_take_off_files_from_ftp(ftp_host=config.FTP_HOST,
                                 user=config.FTP_USER,
                                 passwd=config.FTP_PASSWD,
                                 remove_origin=remove_origin)
-tools.load_pids_list_to_be_removed(coll)
+ids_to_remove = tools.load_pids_list_to_be_removed(coll)
 tools.send_take_off_files_to_ftp(ftp_host=config.FTP_HOST,
                             user=config.FTP_USER,
                             passwd=config.FTP_PASSWD,
@@ -40,6 +37,10 @@ tools.send_take_off_files_to_ftp(ftp_host=config.FTP_HOST,
 # Loading XML files
 for issn in issns:
     index_issn = index_issn + 1
+
+    if issn in ids_to_remove:
+        print "Issn {0} is available in the takeoff and keepinto file. For now this ISSN was ignored, and will not be send to WoS until it is removed from the takeoff file.".format(issn)
+        continue
 
     documents = tools.not_send(coll, issn, publication_year=2002)
 
