@@ -12,7 +12,7 @@ remove_origin = False
 index_issn = 0
 
 print "Loading keepinto.txt ISSN's file from FTP controller directory"
-tools.get_kee_into_file_from_ftp(ftp_host=config.FTP_HOST,
+tools.get_keep_into_file_from_ftp(ftp_host=config.FTP_HOST,
                                  user=config.FTP_USER,
                                  passwd=config.FTP_PASSWD)
 issns = tools.load_journals_list(journals_file='controller/keepinto.txt')
