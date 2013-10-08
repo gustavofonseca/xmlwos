@@ -338,3 +338,21 @@ def sent_to_wos(collection,
         fltr.update({'code_title': code_title})
 
     return find(fltr, collection, skip=skip, limit=limit)
+
+def validated_wos(collection,
+                code_title=None,
+                publication_year=1800,
+                skip=0,
+                limit=10000):
+    """
+    Implements an iterable article PID list cotaining docs already sento to wos.
+    sent_wos = True
+    """
+
+    fltr = {'validated_wos': 'True',
+            'publication_year': {'$gte': str(publication_year)}}
+
+    if code_title:
+        fltr.update({'code_title': code_title})
+
+    return find(fltr, collection, skip=skip, limit=limit)
