@@ -3,12 +3,13 @@ import re
 from datetime import datetime
 import os
 import zipfile
-from ftplib import FTP
+from ftplib import FTP, error_perm
 
 import pymongo
 from pymongo import Connection
 from porteira.porteira import Schema
 from lxml import etree
+
 
 def ftp_connect(ftp_host='localhost',
                 user='anonymous',
@@ -72,6 +73,28 @@ def get_sync_file_from_ftp(ftp_host='localhost',
             ftp.delete('report_file')
 
 
+def get_to_update_file_from_ftp(ftp_host='localhost',
+                                user='anonymous',
+                                passwd='anonymous',
+                                remove_origin=False):
+
+    ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
+    ftp.cwd('controller')
+    with open('controller/toupdate.txt', 'wb') as f:
+        def callback(data):
+            f.write(data)
+        try:
+            ftp.retrbinary('RETR %s' % 'toupdate.txt', callback)
+        except error_perm:
+            return None
+
+    if remove_origin:
+        ftp.delete('toupdate.txt')
+
+    ftp.quit()
+    f.close()
+
+
 def get_keep_into_file_from_ftp(ftp_host='localhost',
                         user='anonymous',
                         passwd='anonymous',
@@ -82,8 +105,10 @@ def get_keep_into_file_from_ftp(ftp_host='localhost',
     with open('controller/keepinto.txt', 'wb') as f:
         def callback(data):
             f.write(data)
-        
-        ftp.retrbinary('RETR %s' % 'keepinto.txt', callback)
+        try:
+            ftp.retrbinary('RETR %s' % 'keepinto.txt', callback)
+        except error_perm:
+            return None
 
     if remove_origin:
         ftp.delete('keepinto.txt')
@@ -112,6 +137,7 @@ def get_take_off_files_from_ftp(ftp_host='localhost',
 
     ftp.quit()
     f.close()
+
 
 def load_pids_list_to_be_removed(coll):
 
@@ -338,6 +364,7 @@ def sent_to_wos(collection,
         fltr.update({'code_title': code_title})
 
     return find(fltr, collection, skip=skip, limit=limit)
+
 
 def validated_wos(collection,
                 code_title=None,

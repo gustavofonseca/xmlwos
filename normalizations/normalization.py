@@ -105,7 +105,6 @@ class Normalization(object):
         for record in records:
             fixed = []
             if context_field in record[context]:
-                import pdb; pdb.set_trace()
                 for item in record[context][context_field]:
                     if subfield in item:
                         key = remove_accents(item[subfield].lower().strip())
@@ -143,24 +142,23 @@ def main(*args, **xargs):
                        subfield=xargs['subfield'],
                        write_into=xargs['write_to_another_subfield'])
 
- 
-parser = argparse.ArgumentParser(description="Create an access report")
-parser.add_argument('--mongodb_host', default='localhost', help='The MongoDB host containing the database with SciELO Articles')
-parser.add_argument('--mongodb_port', default=27017, help='The MongoDB port containing the database with SciELO Articles')
-parser.add_argument('--fltr', default={}, help='Define a filter where the fix must be applied ex: {"code": "S0034-74342010000300011"}. There are filter available for article, journal and issue level.')
-parser.add_argument('--field', default=None, help='Give the field path that will be fixed ex: article.v70')
-parser.add_argument('--subfield', default='_', help='Give the subfield key that will be fixed if applicable ex: p')
-parser.add_argument('--write_to_another_subfield', default=None, help='Give a subfield key that will be filled with the normalization data. To be used if you want to create a new subfield with the normalized data, without changing the original data. If None, it will take the subfield given at --subfield.')
-parser.add_argument('--conversion_table', default='conversion_table.csv', help='Give file name containg the conversion table. Must be the exact path for the file in the file system')
-args = parser.parse_args()
- 
+  
 if __name__ == "__main__":
  
+    parser = argparse.ArgumentParser(description="Create an access report")
+    parser.add_argument('--mongodb_host', default='localhost', help='The MongoDB host containing the database with SciELO Articles')
+    parser.add_argument('--mongodb_port', default=27017, help='The MongoDB port containing the database with SciELO Articles')
+    parser.add_argument('--fltr', default={}, help='Define a filter where the fix must be applied ex: {"code": "S0034-74342010000300011"}. There are filter available for article, journal and issue level.')
+    parser.add_argument('--field', default=None, help='Give the field path that will be fixed ex: article.v70')
+    parser.add_argument('--subfield', default='_', help='Give the subfield key that will be fixed if applicable ex: p')
+    parser.add_argument('--write_to_another_subfield', default=None, help='Give a subfield key that will be filled with the normalization data. To be used if you want to create a new subfield with the normalized data, without changing the original data. If None, it will take the subfield given at --subfield.')
+    parser.add_argument('--conversion_table', default='conversion_table.csv', help='Give file name containg the conversion table. Must be the exact path for the file in the file system')
+    args = parser.parse_args()
+
     main(mongodb_host=args.mongodb_host,
          mongodb_port=args.mongodb_port,
          fltr=args.fltr,
          field=args.field,
          subfield=args.subfield,
          write_to_another_subfield=args.write_to_another_subfield,
-         conv_table=args.conversion_table
-         )
+         conv_table=args.conversion_table)
