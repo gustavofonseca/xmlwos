@@ -14,7 +14,9 @@ from lxml import etree
 def ftp_connect(ftp_host='localhost',
                 user='anonymous',
                 passwd='anonymous'):
-
+    """
+    ### MIGRADO
+    """
     ftp = FTP(ftp_host)
     ftp.login(user=user, passwd=passwd)
 
@@ -25,7 +27,9 @@ def send_to_ftp(file_name,
                 ftp_host='localhost',
                 user='anonymous',
                 passwd='anonymous'):
-
+    """
+    ### MIGRADO
+    """
     ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
     f = open('tmp/{0}'.format(file_name), 'rd')
     ftp.storbinary('STOR inbound/{0}'.format(file_name), f)
@@ -39,7 +43,7 @@ def send_take_off_files_to_ftp(ftp_host='localhost',
                                 remove_origin=False):
 
     ftp = ftp_connect(ftp_host=ftp_host, user=user, passwd=passwd)
-    
+
     for fl in os.listdir('controller'):
         if fl.split('.')[-1] == 'del':
             f = open('controller/{0}'.format(fl), 'rd')
@@ -47,7 +51,7 @@ def send_take_off_files_to_ftp(ftp_host='localhost',
             f.close()
         if remove_origin:
             os.remove('controller/{0}'.format(fl))
-    
+
     ftp.quit()
 
 
