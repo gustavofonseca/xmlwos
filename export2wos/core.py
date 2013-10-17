@@ -4,21 +4,73 @@ import StringIO
 
 import os
 import ftplib
+import functools
+
+
+def isolate_connection(func):
+    functools.wraps(func)
+    def isolation(self, *args, **kwargs):
+        self._connect()
+        _return = func(self, *args, **kwargs)
+
+        if not self.keep_alive:
+            self._disconnect()
+
+        return _return
+
+    return isolation
 
 
 class FTPServer(object):
-    def __init__(self, host, user, password):
+    def __init__(self, host, user, password, keep_alive=False):
+        """
+        Encapsulate some FTP functionality.
+
+        :param host: ftp host as string
+        :param user: username as string
+        :param password: password as string
+        :param keep_alive: (optional) if the connection should live across actions.
+        """
         self.host = host
         self.user = user
         self.password = password
 
+        self.conn = None
+        self.keep_alive = keep_alive
+
+    def __del__(self):
+        self._disconnect()
+
+    def __enter__(self):
+        self.keep_alive = True
         self._connect()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._disconnect()
 
     def _connect(self):
-        if not hasattr(self, 'conn'):
+        if self.conn is None:
             self.conn = ftplib.FTP(self.host)
             self.conn.login(user=self.user, passwd=self.password)
 
+    def _disconnect(self):
+        if self.conn:
+            self.conn.quit()
+            self.conn = None
+
+    def _cwd(self, path):
+        if not self.conn:
+            raise RuntimeError('Need a live connection to change the cwd')
+        self.conn.cwd(path)
+
+    def cwd(self, path):
+        ftp_server = FTPServer(self.host, self.user, self.password, keep_alive=True)
+        ftp_server._connect()
+        ftp_server._cwd(path)
+        return ftp_server
+
+    @isolate_connection
     def send(self, fp, destination):
         """
         Sends `fp` to `destination`.
@@ -31,6 +83,14 @@ class FTPServer(object):
 
         command = 'STOR {}'.format(destination)
         self.conn.storbinary(command, fp)
+
+    @isolate_connection
+    def retrieve(self, filepath, callback):
+        """
+        Retrieves `filepath` and pass its data to `callback`.
+        """
+        command = 'RETR {}'.format(filepath)
+        self.conn.retrbinary(command, callback)
 
 
 class Clerk(object):
@@ -47,7 +107,7 @@ class Clerk(object):
         """
         for fl in os.listdir(base_dir):
 
-            if fl.split('.')[-1] != 'del':
+            if not fl.endswith('del'):
                 continue
 
             file_path = os.path.join(base_dir, fl)
@@ -59,6 +119,24 @@ class Clerk(object):
             if remove_origin:
                 os.remove(file_path)
 
+    def sync_file_from_ftp(self, path_expr, output):
+        """
+        Lists all files matching `path_expr` and do some pyromaniacal stuff.
+
+        >>> with open('/tmp/reports.txt', 'wb') as fp:
+        >>>     clerk.sync_from_ftp('reports/*', fp)
+        """
+        base, expr = path_expr.rsplit('/', 1)
+
+        with ftp.cwd(base) as cwd:
+            report_files = ftp.conn.nlst(expr)
+
+            def callback(data):
+                output.write(data)
+
+            for report_file in report_files:
+                ftp.retrieve(report_file, callback)
+
 
 ######
 # TESTES
@@ -68,31 +146,16 @@ class FTPServerTests(mocker.MockerTestCase):
     ftp_server = FTPServer('localhost', 'user', 'password')
     """
     def test_ftpserver_initialization(self):
-        mock_FTPServer = self.mocker.patch(FTPServer)
-        mock_FTPServer._connect()
-        self.mocker.result(None)
-        self.mocker.replay()
+        #mock_FTPServer = self.mocker.patch(FTPServer)
+        #mock_FTPServer._connect()
+        #self.mocker.result(None)
+        #self.mocker.replay()
 
         ftp_server = FTPServer('localhost', 'user', 'pass')
 
         self.assertEqual(ftp_server.host, 'localhost')
         self.assertEqual(ftp_server.user, 'user')
         self.assertEqual(ftp_server.password, 'pass')
-
-    def test_ftp_connection_on_init(self):
-        mock_ftplib = self.mocker.replace('ftplib')
-        mock_ftp = self.mocker.mock()
-
-        mock_ftplib.FTP('localhost')
-        self.mocker.result(mock_ftp)
-
-        mock_ftp.login(user='user', passwd='pass')
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
-        ftp_server = FTPServer('localhost', 'user', 'pass')
-        self.assertTrue(hasattr(ftp_server, 'conn'))
 
     def test_send_only_binary_files(self):
         mock_FTPServer = self.mocker.patch(FTPServer)
@@ -121,6 +184,39 @@ class FTPServerTests(mocker.MockerTestCase):
 
         ftp_server = FTPServer('localhost', 'user', 'pass')
         self.assertIsNone(ftp_server.send(fp_bar, 'inbound/bar.txt'))
+
+    def test_retrieve(self):
+        mock_FTPServer = self.mocker.patch(FTPServer)
+
+        mock_FTPServer._connect()
+        self.mocker.result(None)
+
+        mock_FTPServer.conn.retrbinary('RETR reports/blue.txt', mocker.ANY)
+        self.mocker.result(None)
+        self.mocker.replay()
+
+        ftp_server = FTPServer('localhost', 'user', 'pass')
+        self.assertIsNone(ftp_server.retrieve('reports/blue.txt', lambda x: x))
+
+    def test_cwd(self):
+        mock_FTPServer = self.mocker.patch(FTPServer)
+        mock_FTPConn = self.mocker.mock()
+
+        mock_FTPServer._connect()
+        self.mocker.result(None)
+
+        mock_FTPServer.conn
+        self.mocker.result(mock_FTPConn)
+        self.mocker.count(4)
+
+        mock_FTPConn.cwd('reports')
+        self.mocker.result(None)
+        self.mocker.replay()
+
+        ftp_server = FTPServer('localhost', 'user', 'pass')
+        ftp_server._connect()
+
+        self.assertIsNone(ftp_server._cwd('reports'))
 
 
 class ClerkTests(mocker.MockerTestCase):
